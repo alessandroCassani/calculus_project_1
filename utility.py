@@ -114,21 +114,22 @@ class Utility:
 
         return sparse_matrix  # Return the created sparse matrix
 
-def cholesky_decomposition_sparse(A):
+
+def cholesky_decomposition_sparse_csc(A):
     """
-    Perform Cholesky decomposition for a sparse matrix A in CSR format.
+    Perform Cholesky decomposition for a sparse matrix A in CSC format.
 
     Parameters:
-    A : scipy.sparse.csr_matrix
+    A : scipy.sparse.csc_matrix
         Input sparse matrix to decompose.
 
     Returns:
-    L : scipy.sparse.csr_matrix
+    L : scipy.sparse.csc_matrix
         Lower triangular matrix L such that A = L * L^T.
     """
-    # Check if A is a CSR matrix
-    if not isinstance(A, csr_matrix):
-        raise ValueError("Input matrix A must be a scipy.sparse.csr_matrix")
+    # Check if A is a CSC matrix
+    if not isinstance(A, csc_matrix):
+        raise ValueError("Input matrix A must be a scipy.sparse.csc_matrix")
     
     # Get the size of the matrix
     n = A.shape[0]
@@ -158,18 +159,18 @@ def cholesky_decomposition_sparse(A):
         values.append(rkk)
 
         # Calculate and store the elements below the diagonal in L
-        for j in range(k+1, n):
-            rkj = A_star[k, j] / rkk
-            rows_index.append(k)
-            cols_index.append(j)
-            values.append(rkj)
+        for i in range(k+1, n):
+            rik = A_star[i, k] / rkk
+            rows_index.append(i)
+            cols_index.append(k)
+            values.append(rik)
         
         # Update A_star for the next iteration
         rho = 1.0 / A_star[k, k]
         for j in range(k+1, n):
             for i in range(k+1, n):
-                A_star[i, j] = A_star[i, j] - rho * A_star[i, k] * A_star[k, j]
+                A_star[i, j] = A_star[i, j] - rho * A_star[i, k] * A_star[j, k]
     
     # Create the sparse matrix L from the lists of entries
-    L = csr_matrix((values, (rows_index, cols_index)), shape=(n, n))
+    L = csc_matrix((values, (rows_index, cols_index)), shape=(n, n))
     return L
