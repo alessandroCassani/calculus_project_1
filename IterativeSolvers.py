@@ -1,4 +1,4 @@
-import utility  # Importing utility functions (initializing vectors, calculating residuals)
+from Utility import Utility
 import numpy as np  # Importing NumPy for numerical operations
 import scipy.sparse as sp  # Importing SciPy sparse matrix functions
 from scipy.sparse import csc_matrix  # Importing compressed sparse column matrix format
@@ -19,9 +19,10 @@ class IterativeSolvers:
         Raises:
         - ValueError: If A is not symmetric or not positive definite.
         """
-        if not utility.is_symmetric(A):
+    
+        if not Utility.is_symmetric(A):
             raise ValueError("Matrix A is not symmetric.")
-        if not utility.is_positive_definite(A):
+        if not Utility.is_positive_definite(A):
             raise ValueError("Matrix A is not positive definite.")
 
     @staticmethod
@@ -40,7 +41,7 @@ class IterativeSolvers:
         """
         IterativeSolvers.check_matrix_properties(A)
         
-        x = utility.init_zero_vector(A.shape[0])  # Initialize solution vector x with zeros
+        x = Utility.init_zero_vector(A.shape[0])  # Initialize solution vector x with zeros
         D = A.diagonal()  # Extract the diagonal elements of A
         R = A - sp.diags(D)  # Calculate the remainder matrix R (A without diagonal)
 
@@ -48,7 +49,7 @@ class IterativeSolvers:
             # Compute the next iteration vector x_new
             x_new = (b - R @ x) / D
             # Check the convergence criterion
-            if utility.relative_residual_norm(A, x_new, b) < tol:
+            if Utility.relative_residual_norm(A, x_new, b) < tol:
                 return x_new  # Return solution if within tolerance
             x = x_new  # Update x for the next iteration
 
@@ -69,7 +70,7 @@ class IterativeSolvers:
         np.ndarray: Solution vector x
         """
         IterativeSolvers.check_matrix_properties(A)
-        x = utility.init_zero_vector(A.shape[0])  # Initialize solution vector x with zeros
+        x = Utility.init_zero_vector(A.shape[0])  # Initialize solution vector x with zeros
         
         for k in range(max_iter):
             x_new = np.copy(x)  # Make a copy of x to update values
@@ -79,7 +80,7 @@ class IterativeSolvers:
                 # Update the ith element of x_new
                 x_new[i] = (b[i] - sigma) / A[i, i]
             # Check the convergence criterion
-            if utility.relative_residual_norm(A, x_new, b) < tol:
+            if Utility.relative_residual_norm(A, x_new, b) < tol:
                 return x_new  # Return solution if within tolerance
             x = x_new  # Update x for the next iteration
 
@@ -100,7 +101,7 @@ class IterativeSolvers:
         np.ndarray: Solution vector x
         """
         IterativeSolvers.check_matrix_properties(A)
-        x = utility.init_zero_vector(A.shape[0])  # Initialize solution vector x with zeros
+        x = Utility.init_zero_vector(A.shape[0])  # Initialize solution vector x with zeros
         r = b - A @ x  # Compute the initial residual vector r
 
         for k in range(max_iter):
@@ -131,7 +132,7 @@ class IterativeSolvers:
         np.ndarray: Solution vector x
         """
         IterativeSolvers.check_matrix_properties(A)
-        x = utility.init_zero_vector(A.shape[0])  # Initialize solution vector x with zeros
+        x = Utility.init_zero_vector(A.shape[0])  # Initialize solution vector x with zeros
         r = b - A @ x  # Compute the initial residual vector r
         p = np.copy(r)  # Initialize the conjugate direction vector p
         rs_old = r.dot(r)  # Compute the initial dot product of r

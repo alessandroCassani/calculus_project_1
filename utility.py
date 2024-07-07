@@ -1,8 +1,9 @@
 import numpy as np
 import scipy.sparse as sp
 from scipy.sparse import csc_matrix
+from scipy.io import mmread
 
-class utility:
+class Utility:
     
     @staticmethod
     def is_symmetric(A: csc_matrix) -> bool:
@@ -66,7 +67,7 @@ class utility:
 
     @staticmethod
     def is_symmetric(A: csc_matrix) -> bool:
-        """
+        """ 
         Check if the matrix A is symmetric.
         
         Parameters:
@@ -76,3 +77,11 @@ class utility:
         - bool: True if A is symmetric, False otherwise.
         """
         return (A != A.T).nnz == 0
+    
+    @staticmethod
+    def read_sparse_matrix(file_path: str) -> csc_matrix:
+        """
+        Reads a sparse matrix from a Matrix Market file (.mtx) and returns it as a csc_matrix.
+        """
+        return mmread(file_path).tocsc()
+
