@@ -11,10 +11,7 @@ from ConjugateGradientExecuter import ConjugateGradientExecuter
 
 def run_matrix_solvers():
     root_dir = "matrici"
-    matrix_files = [os.path.join(root_dir, "spa1.mtx"),
-                    os.path.join(root_dir, "spa2.mtx"),
-                    os.path.join(root_dir, "vem1.mtx"),
-                    os.path.join(root_dir, "vem2.mtx")]
+    matrix_files = Utility.build_matrix_paths_list('matrici')
     tolerances = [1e-4, 1e-6, 1e-8, 1e-10]
     max_iterations = 20000
 
