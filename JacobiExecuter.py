@@ -10,4 +10,4 @@ class JacobiExecuter(Executer):
     def update_function(self):
         r = self.b - self.matrix.dot(self.x)  # r(k) = b - A * x(k)
         new_x = self.x + self.diagonal_inv * r  # x(k+1) = x(k) + P^-1 * r(k)
-        return new_x, r  # Return the new x and residual r
+        return new_x, r 

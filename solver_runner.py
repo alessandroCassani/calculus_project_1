@@ -18,7 +18,7 @@ def run_matrix_solvers():
     for matrix in matrix_files:
         A = Utility.read(matrix)
         if A is None:
-            continue  # Skip this matrix if it couldn't be read
+            continue 
 
         for tol in tolerances:
             print(f'\nSolving {matrix} with tolerance {tol}')

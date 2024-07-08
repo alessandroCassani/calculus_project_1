@@ -26,7 +26,7 @@ class Executer(ABC):
             self.counter += 1
             residual_norm = np.linalg.norm(residual_vector)
             if residual_norm < self.tol:
-                print(f'{self.__class__.__name__}: Converged with residual norm {residual_norm:.6f}')
+                print(f'{self.__class__.__name__}: Converged with residual norm {residual_norm}')
                 break
             if self.counter >= self.iterations:
                 print('Maximum iteration number exceeded')
