@@ -39,7 +39,7 @@ class IterativeSolvers:
         Returns:
         np.ndarray: Solution vector x
         """
-        IterativeSolvers.check_matrix_properties(A)
+        #IterativeSolvers.check_matrix_properties(A)
         
         x = Utility.init_zero_vector(A.shape[0])  # Initialize solution vector x with zeros
         D = A.diagonal()  # Extract the diagonal elements of A
@@ -69,7 +69,7 @@ class IterativeSolvers:
         Returns:
         np.ndarray: Solution vector x
         """
-        IterativeSolvers.check_matrix_properties(A)
+        #IterativeSolvers.check_matrix_properties(A)
         x = Utility.init_zero_vector(A.shape[0])  # Initialize solution vector x with zeros
         
         for k in range(max_iter):
@@ -100,7 +100,7 @@ class IterativeSolvers:
         Returns:
         np.ndarray: Solution vector x
         """
-        IterativeSolvers.check_matrix_properties(A)
+        #IterativeSolvers.check_matrix_properties(A)
         x = Utility.init_zero_vector(A.shape[0])  # Initialize solution vector x with zeros
         r = b - A @ x  # Compute the initial residual vector r
 
@@ -131,7 +131,7 @@ class IterativeSolvers:
         Returns:
         np.ndarray: Solution vector x
         """
-        IterativeSolvers.check_matrix_properties(A)
+        #IterativeSolvers.check_matrix_properties(A)
         x = Utility.init_zero_vector(A.shape[0])  # Initialize solution vector x with zeros
         r = b - A @ x  # Compute the initial residual vector r
         p = np.copy(r)  # Initialize the conjugate direction vector p

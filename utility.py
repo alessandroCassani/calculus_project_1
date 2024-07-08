@@ -1,69 +1,16 @@
 import numpy as np
 import scipy.sparse as sp
-from scipy.sparse import csc_matrix
+from scipy.sparse import csc_matrix, lil_matrix
 from scipy.io import mmread
 
 class Utility:
-
+    
     @staticmethod
-    def is_positive_definite(A: csc_matrix) -> bool:
-        """
-        Check if the matrix A is positive definite.
-        
-        Parameters:
-        - A (csc_matrix): The sparse matrix to check.
-        
-        Returns:
-        - bool: True if A is positive definite, False otherwise.
-        """
-        try:
-            # Try to compute Cholesky decomposition
-            sp.linalg.cholesky(A)
-            return True
-        except sp.linalg.LinAlgError:
-            return False
-
-    @staticmethod
-    def init_zero_vector(size: int) -> np.ndarray:
-        """
-        Initialize a zero vector of given size.
-        
-        Parameters:
-        - size (int): The size of the vector.
-        
-        Returns:
-        - np.ndarray: The initialized zero vector.
-        """
-        return np.zeros(size)
-
-    @staticmethod
-    def relative_residual_norm(A: csc_matrix, x: np.ndarray, b: np.ndarray) -> float:
-        """
-        Compute the relative residual norm ||Ax - b|| / ||b||.
-        
-        Parameters:
-        - A (csc_matrix): The sparse matrix.
-        - x (np.ndarray): The current solution vector.
-        - b (np.ndarray): The right-hand side vector.
-        
-        Returns:
-        - float: The relative residual norm.
-        """
-        return np.linalg.norm(A @ x - b) / np.linalg.norm(b)
-
-
-    @staticmethod
-    def is_symmetric(A: csc_matrix) -> bool:
-        """ 
-        Check if the matrix A is symmetric.
-        
-        Parameters:
-        - A (csc_matrix): The sparse matrix to check.
-        
-        Returns:
-        - bool: True if A is symmetric, False otherwise.
-        """
-        return (A != A.T).nnz == 0
+    def check_sizes(A: csc_matrix, b: np.ndarray):
+        if A.shape[0] != b.shape[0]:
+            raise ValueError("Matrix A and vector b must have the same number of rows.")
+        if A.shape[0] != A.shape[1]:
+            raise ValueError("Matrix A must be square.")
     
     @staticmethod
     def read_sparse_matrix(file_path):
@@ -111,11 +58,13 @@ class Utility:
 
         # Create the sparse matrix in CSC format using the row indices, column indices, and values
         sparse_matrix = csc_matrix((values, (rows_index, cols_index)))
+        
+        print('Matrix read correctly! \n')
 
         return sparse_matrix  # Return the created sparse matrix
 
 
-def cholesky_decomposition_sparse_csc(A):
+def cholesky_decomposition(A):
     """
     Perform Cholesky decomposition for a sparse matrix A in CSC format.
 
@@ -138,32 +87,23 @@ def cholesky_decomposition_sparse_csc(A):
     if n != A.shape[1]:
         raise ValueError("Matrix A must be square")
     
-    # Lists to store the sparse matrix entries
-    rows_index = []
-    cols_index = []
-    values = []
+    # Create an empty L matrix in LIL format
+    L = lil_matrix((n, n), dtype=np.float64)
 
-    # Dense matrix R to store intermediate calculations
-    R = np.zeros((n, n), dtype=np.float64)
-    
     # Copy of A to perform operations without modifying the original
-    A_star = A.copy()
+    A_star = A.copy().tolil()
 
+    print('Performing cholesky decomposition... \n')
     # Perform Cholesky decomposition
     for k in range(n):
         # Calculate the diagonal element of L
         rkk = np.sqrt(A_star[k, k])
         # Store the diagonal element in L
-        rows_index.append(k)
-        cols_index.append(k)
-        values.append(rkk)
+        L[k, k] = rkk
 
         # Calculate and store the elements below the diagonal in L
         for i in range(k+1, n):
-            rik = A_star[i, k] / rkk
-            rows_index.append(i)
-            cols_index.append(k)
-            values.append(rik)
+            L[i, k] = A_star[i, k] / rkk
         
         # Update A_star for the next iteration
         rho = 1.0 / A_star[k, k]
@@ -171,6 +111,6 @@ def cholesky_decomposition_sparse_csc(A):
             for i in range(k+1, n):
                 A_star[i, j] = A_star[i, j] - rho * A_star[i, k] * A_star[j, k]
     
-    # Create the sparse matrix L from the lists of entries
-    L = csc_matrix((values, (rows_index, cols_index)), shape=(n, n))
-    return L
+    # Convert L to CSC format
+    return L.tocsc()
+
