@@ -71,7 +71,7 @@ class Utility:
 
 
     @staticmethod
-    def is_symmetric(matrix):
+    def is_symmetric(matrix: csc_matrix):
         """Check if a sparse matrix is symmetric."""
         if not matrix.shape[0] == matrix.shape[1]:
             return False  # Sparse matrix must be square to be symmetric
@@ -81,5 +81,5 @@ class Utility:
         return matrix.shape == transpose.shape and np.allclose(matrix.toarray(), transpose.toarray())
     
     @staticmethod
-    def matrix_checks(matrix):
+    def matrix_checks(matrix: csc_matrix):
         return Utility.is_positive_definite(matrix) &  Utility.is_symmetric(matrix)

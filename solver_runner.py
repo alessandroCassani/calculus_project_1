@@ -19,6 +19,11 @@ def run_matrix_solvers():
 
     for matrix in matrix_files:
         A = Utility.read(matrix)
+        
+        if Utility.matrix_checks(A) is False:
+            print('incorrect matrix')
+            return
+        
         if A is None:
             continue 
         
@@ -32,7 +37,7 @@ def run_matrix_solvers():
                 ('Gradient Descent', GradientExecuter(A, tol, max_iterations)),
                 ('Conjugate Gradient', ConjugateGradientExecuter(A, tol, max_iterations))
             ]
-
+            
             for solver_name, solver in solvers:
                 print(f'\nSolving {matrix} with tolerance {tol} using {solver_name}')
                 
