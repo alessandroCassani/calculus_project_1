@@ -3,6 +3,7 @@ import scipy.sparse as sp
 from scipy.sparse import csc_matrix, lil_matrix
 from scipy.io import mmread
 import os
+import csv  
 
 class Utility:
     
@@ -32,3 +33,12 @@ class Utility:
             if os.path.isfile(f) and f.endswith('.mtx'):
                 matrici.append(f)
         return matrici
+    
+    @staticmethod
+    def write_usage_csv(file_path, data):
+        os.makedirs(os.path.dirname(file_path), exist_ok=True)
+        with open(file_path, mode='w', newline='') as file:
+            writer = csv.DictWriter(file, fieldnames=['Matrix', 'Solver', 'Tolerance', 'Memory Usage (MB)', 'Time Usage (seconds)'])
+            writer.writeheader()
+            for entry in data:
+                writer.writerow(entry)
