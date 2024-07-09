@@ -19,23 +19,20 @@ class Executer(ABC):
 
     def methodExecution(self):
         start = time.time()
+        residual_norm = None  # Initialize residual_norm
         for self.counter in range(self.iterations):
-            #print(f"Iteration {self.counter}: x shape = {self.x.shape}")
             self.x, residual_vector = self.update_function()  # Update x and get residual
-            #print(f"Iteration {self.counter}: updated x shape = {self.x.shape}")
-            self.counter += 1
             residual_norm = np.linalg.norm(residual_vector)
             if residual_norm < self.tol:
                 print(f'{self.__class__.__name__}: Converged with residual norm {residual_norm}')
                 break
-            if self.counter >= self.iterations:
-                print('Maximum iteration number exceeded')
-                break
-        else:
-            print(f'{self.__class__.__name__}: Did not converge within {self.iterations} iterations')
-        
+            else:
+                print(f'{self.__class__.__name__}: Did not converge within {self.iterations} iterations')
+    
         end = time.time() - start
         self.execution_timer = end
+        return self.x, self.counter, residual_norm  # Return the updated x, number of iterations, and residual norm
+
 
     @abstractmethod
     def update_function(self):

@@ -46,10 +46,13 @@ def run_matrix_solvers():
                 start_time = time.time()
                 mem_usage = memory_usage((solver.methodExecution,), max_iterations=1)[0]
                 end_time = time.time()
+                _, iterations, residual_norm = solver.methodExecution()
 
                 tol_results[solver_name] = {
                     'Memory Usage (MB)': mem_usage,
-                    'Time Usage (seconds)': end_time - start_time
+                    'Time Usage (seconds)': end_time - start_time,
+                    'Iterations': iterations,
+                    'Residual Norm': residual_norm
                 }
 
             matrix_results[tol] = tol_results
@@ -70,26 +73,43 @@ def parse_data(results):
                     'Solver': solver,
                     'Tolerance': tol,
                     'Memory Usage (MB)': metrics['Memory Usage (MB)'],
-                    'Time Usage (seconds)': metrics['Time Usage (seconds)']
+                    'Time Usage (seconds)': metrics['Time Usage (seconds)'],
+                    'Iterations': metrics['Iterations'],
+                    'Residual Norm': metrics['Residual Norm']
                 })
     return pd.DataFrame(parsed_data)
 
 def plot_results(df):
-    plt.figure(figsize=(12, 8))
+    plt.figure(figsize=(12, 16))
     
     sns.set(style="whitegrid")
 
     # Plot time usage
-    plt.subplot(2, 1, 1)
+    plt.subplot(4, 1, 1)
     sns.barplot(x='Matrix', y='Time Usage (seconds)', hue='Solver', data=df)
     plt.title('Time Usage by Solver and Matrix')
     plt.ylabel('Time Usage (seconds)')
     plt.xlabel('Matrix')
-    
-    plt.subplot(2, 1, 2)
+
+    # Plot memory usage
+    plt.subplot(4, 1, 2)
     sns.barplot(x='Matrix', y='Memory Usage (MB)', hue='Solver', data=df)
     plt.title('Memory Usage by Solver and Matrix')
     plt.ylabel('Memory Usage (MB)')
+    plt.xlabel('Matrix')
+
+    # Plot number of iterations
+    plt.subplot(4, 1, 3)
+    sns.barplot(x='Matrix', y='Iterations', hue='Solver', data=df)
+    plt.title('Iterations by Solver and Matrix')
+    plt.ylabel('Iterations')
+    plt.xlabel('Matrix')
+
+    # Plot residual norm
+    plt.subplot(4, 1, 4)
+    sns.barplot(x='Matrix', y='Residual Norm', hue='Solver', data=df)
+    plt.title('Residual Norm by Solver and Matrix')
+    plt.ylabel('Residual Norm')
     plt.xlabel('Matrix')
     
     plt.tight_layout()
