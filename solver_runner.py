@@ -106,47 +106,72 @@ def plot_results(df):
 
     def on_configure(event):
         canvas.configure(scrollregion=canvas.bbox('all'))
+        if scrollable_frame.winfo_width() != canvas.winfo_width():
+            canvas.itemconfigure('window', width=canvas.winfo_width())
 
     scrollable_frame.bind('<Configure>', on_configure)
 
-    # Plotting in the scrollable frame
-    fig, axs = plt.subplots(3, 1, figsize=(12, 24))
-
     sns.set(style="whitegrid")
 
-    # Plot time usage
-    max_time = df['Time Usage (seconds)'].max()
-    sns.barplot(x='Matrix', y='Time Usage (seconds)', hue='Solver', data=df, ax=axs[0])
-    axs[0].set_title('Time Usage by Solver and Matrix')
-    axs[0].set_ylabel('Time Usage (seconds)')
-    axs[0].set_xlabel('Matrix')
-    axs[0].set_ylim(0, max_time * 1.1)  # Set ylim slightly above max time for better visualization
-    
-    # Plot residual
-    max_residual = df['Residual'].max()
-    sns.barplot(x='Matrix', y='Residual', hue='Solver', data=df, ax=axs[1])
-    axs[1].set_title('Residual by Solver and Matrix')
-    axs[1].set_ylabel('Residual')
-    axs[1].set_xlabel('Matrix')
-    axs[1].set_ylim(0, max_residual * 1.1)  # Set ylim slightly above max residual for better visualization
+    # Get unique matrices
+    matrices = df['Matrix'].unique()
 
-    # Plot iterations
-    max_iterations = df['Iterations'].max()
-    sns.barplot(x='Matrix', y='Iterations', hue='Solver', data=df, ax=axs[2])
-    axs[2].set_title('Iterations by Solver and Matrix')
-    axs[2].set_ylabel('Iterations')
-    axs[2].set_xlabel('Matrix')
-    axs[2].set_ylim(0, max_iterations * 1.1)  # Set ylim slightly above max iterations for better visualization
+    for idx, matrix in enumerate(matrices):
+        matrix_df = df[df['Matrix'] == matrix]
 
-    plt.tight_layout()
+        fig, axs = plt.subplots(3, 1, figsize=(12, 24))
+        fig.suptitle(f'Results for Matrix: {matrix}', fontsize=16)
 
-    # Embed the plot into the Tkinter frame
-    canvas_plot = FigureCanvasTkAgg(fig, master=scrollable_frame)
-    canvas_plot.draw()
-    canvas_plot.get_tk_widget().pack(side=tk.TOP, fill=tk.BOTH, expand=True)
+        # Plot time usage
+        max_time = matrix_df['Time Usage (seconds)'].max()
+        barplot = sns.barplot(x='Tolerance', y='Time Usage (seconds)', hue='Solver', data=matrix_df, ax=axs[0])
+        axs[0].set_title('Time Usage by Solver and Tolerance')
+        axs[0].set_ylabel('Time Usage (seconds)')
+        axs[0].set_xlabel('Tolerance')
+        axs[0].set_ylim(0, max_time * 1.1)  # Set ylim slightly above max time for better visualization
+
+        for container in axs[0].containers:
+            axs[0].bar_label(container)
+
+        for patch in barplot.patches:
+            patch.set_edgecolor(patch.get_facecolor())
+
+        # Plot residual
+        max_residual = matrix_df['Residual'].max()
+        barplot = sns.barplot(x='Tolerance', y='Residual', hue='Solver', data=matrix_df, ax=axs[1])
+        axs[1].set_title('Residual by Solver and Tolerance')
+        axs[1].set_ylabel('Residual')
+        axs[1].set_xlabel('Tolerance')
+        axs[1].set_ylim(0, max_residual * 1.1)  # Set ylim slightly above max residual for better visualization
+
+        for container in axs[1].containers:
+            axs[1].bar_label(container)
+
+        for patch in barplot.patches:
+            patch.set_edgecolor(patch.get_facecolor())
+
+        # Plot iterations
+        max_iterations = matrix_df['Iterations'].max()
+        barplot = sns.barplot(x='Tolerance', y='Iterations', hue='Solver', data=matrix_df, ax=axs[2])
+        axs[2].set_title('Iterations by Solver and Tolerance')
+        axs[2].set_ylabel('Iterations')
+        axs[2].set_xlabel('Tolerance')
+        axs[2].set_ylim(0, max_iterations * 1.1)  # Set ylim slightly above max iterations for better visualization
+
+        for container in axs[2].containers:
+            axs[2].bar_label(container)
+
+        for patch in barplot.patches:
+            patch.set_edgecolor(patch.get_facecolor())
+
+        plt.tight_layout(rect=[0, 0, 1, 0.96])
+
+        # Embed the plot into the Tkinter frame
+        canvas_plot = FigureCanvasTkAgg(fig, master=scrollable_frame)
+        canvas_plot.draw()
+        canvas_plot.get_tk_widget().pack(side=tk.TOP, fill=tk.BOTH, expand=True)
 
     root.mainloop()
-
 
 if __name__ == "__main__":
     results = run_matrix_solvers()
