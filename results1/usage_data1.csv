@@ -3,59 +3,59 @@ Matrix,Solver,Tolerance,Iterations,Residual,Time Usage (seconds)
                      MATRIX: spa1.mtx
 
 TOLERANCE : 0.0001
-Jacobi,Iterations:,181,Residual:,9.649907454818539e-05,Time Usage (seconds):,0.0145
-Conjugate Gradient,Iterations:,165,Residual:,8.374911600201817e-05,Time Usage (seconds):,0.0458
+Jacobi,Iterations:,181,Residual:,9.649907454818539e-05,Time Usage (seconds):,0.0313
+Conjugate Gradient,Iterations:,165,Residual:,8.374911600201817e-05,Time Usage (seconds):,0.0365
 
 TOLERANCE : 1e-06
-Jacobi,Iterations:,247,Residual:,9.795087350463614e-07,Time Usage (seconds):,0.0399
-Conjugate Gradient,Iterations:,186,Residual:,9.605362861832144e-07,Time Usage (seconds):,0.0717
+Jacobi,Iterations:,247,Residual:,9.795087350463614e-07,Time Usage (seconds):,0.0333
+Conjugate Gradient,Iterations:,186,Residual:,9.605362861832144e-07,Time Usage (seconds):,0.0499
 
 TOLERANCE : 1e-08
-Jacobi,Iterations:,313,Residual:,9.942421558252864e-09,Time Usage (seconds):,0.1027
-Conjugate Gradient,Iterations:,208,Residual:,9.991613790165245e-09,Time Usage (seconds):,0.0605
+Jacobi,Iterations:,313,Residual:,9.942421558252864e-09,Time Usage (seconds):,0.0499
+Conjugate Gradient,Iterations:,208,Residual:,9.991613790165245e-09,Time Usage (seconds):,0.0580
 
 TOLERANCE : 1e-10
-Jacobi,Iterations:,380,Residual:,9.412852994533572e-11,Time Usage (seconds):,0.0544
-Conjugate Gradient,Iterations:,231,Residual:,9.149435837536692e-11,Time Usage (seconds):,0.0535
+Jacobi,Iterations:,380,Residual:,9.412852994533572e-11,Time Usage (seconds):,0.0507
+Conjugate Gradient,Iterations:,231,Residual:,9.149435837536692e-11,Time Usage (seconds):,0.0677
 --------------------------------------------------------------------------------
 
 
                      MATRIX: spa2.mtx
 
 TOLERANCE : 0.0001
-Jacobi,Iterations:,59,Residual:,9.30851381929731e-05,Time Usage (seconds):,0.1167
-Conjugate Gradient,Iterations:,190,Residual:,9.883565415587824e-05,Time Usage (seconds):,0.6236
+Jacobi,Iterations:,59,Residual:,9.30851381929731e-05,Time Usage (seconds):,0.0995
+Conjugate Gradient,Iterations:,190,Residual:,9.883565415587824e-05,Time Usage (seconds):,0.5657
 
 TOLERANCE : 1e-06
-Jacobi,Iterations:,80,Residual:,8.784177115699665e-07,Time Usage (seconds):,0.1573
-Conjugate Gradient,Iterations:,233,Residual:,9.91361406608428e-07,Time Usage (seconds):,0.7078
+Jacobi,Iterations:,80,Residual:,8.784177115699665e-07,Time Usage (seconds):,0.1189
+Conjugate Gradient,Iterations:,233,Residual:,9.91361406608428e-07,Time Usage (seconds):,0.6678
 
 TOLERANCE : 1e-08
-Jacobi,Iterations:,101,Residual:,8.289365550670778e-09,Time Usage (seconds):,0.1776
-Conjugate Gradient,Iterations:,286,Residual:,9.021112768849923e-09,Time Usage (seconds):,0.8956
+Jacobi,Iterations:,101,Residual:,8.289365550670778e-09,Time Usage (seconds):,0.1533
+Conjugate Gradient,Iterations:,286,Residual:,9.021112768849923e-09,Time Usage (seconds):,0.7544
 
 TOLERANCE : 1e-10
-Jacobi,Iterations:,121,Residual:,9.765679819283832e-11,Time Usage (seconds):,0.1848
-Conjugate Gradient,Iterations:,329,Residual:,9.290627475249494e-11,Time Usage (seconds):,0.9044
+Jacobi,Iterations:,121,Residual:,9.765679819283832e-11,Time Usage (seconds):,0.1881
+Conjugate Gradient,Iterations:,329,Residual:,9.290627475249494e-11,Time Usage (seconds):,0.9234
 --------------------------------------------------------------------------------
 
 
                      MATRIX: vem1.mtx
 
 TOLERANCE : 0.0001
-Jacobi,Iterations:,3084,Residual:,9.959448785619115e-05,Time Usage (seconds):,0.0761
-Conjugate Gradient,Iterations:,43,Residual:,6.417058301408412e-05,Time Usage (seconds):,0.0032
+Jacobi,Iterations:,3084,Residual:,9.959448785619115e-05,Time Usage (seconds):,0.0647
+Conjugate Gradient,Iterations:,43,Residual:,6.417058301408412e-05,Time Usage (seconds):,0.0000
 
 TOLERANCE : 1e-06
-Jacobi,Iterations:,4202,Residual:,9.99965225642342e-07,Time Usage (seconds):,0.0836
-Conjugate Gradient,Iterations:,51,Residual:,6.513616733546936e-07,Time Usage (seconds):,0.0000
+Jacobi,Iterations:,4202,Residual:,9.99965225642342e-07,Time Usage (seconds):,0.0801
+Conjugate Gradient,Iterations:,51,Residual:,6.513616733546936e-07,Time Usage (seconds):,0.0030
 
 TOLERANCE : 1e-08
-Jacobi,Iterations:,5321,Residual:,9.998746030405861e-09,Time Usage (seconds):,0.1004
-Conjugate Gradient,Iterations:,57,Residual:,6.147368663576901e-09,Time Usage (seconds):,0.0008
+Jacobi,Iterations:,5321,Residual:,9.998746030405861e-09,Time Usage (seconds):,0.0851
+Conjugate Gradient,Iterations:,57,Residual:,6.147368663576901e-09,Time Usage (seconds):,0.0080
 
 TOLERANCE : 1e-10
-Jacobi,Iterations:,6440,Residual:,9.993152388751711e-11,Time Usage (seconds):,0.1127
+Jacobi,Iterations:,6440,Residual:,9.993152388751711e-11,Time Usage (seconds):,0.1359
 Conjugate Gradient,Iterations:,62,Residual:,4.4383589825160835e-11,Time Usage (seconds):,0.0000
 --------------------------------------------------------------------------------
 
@@ -63,19 +63,19 @@ Conjugate Gradient,Iterations:,62,Residual:,4.4383589825160835e-11,Time Usage (s
                      MATRIX: vem2.mtx
 
 TOLERANCE : 0.0001
-Jacobi,Iterations:,4904,Residual:,9.98501606494579e-05,Time Usage (seconds):,0.1272
-Conjugate Gradient,Iterations:,54,Residual:,7.337183922168505e-05,Time Usage (seconds):,0.0136
+Jacobi,Iterations:,4904,Residual:,9.98501606494579e-05,Time Usage (seconds):,0.1116
+Conjugate Gradient,Iterations:,54,Residual:,7.337183922168505e-05,Time Usage (seconds):,0.0000
 
 TOLERANCE : 1e-06
-Jacobi,Iterations:,6653,Residual:,9.982147272596698e-07,Time Usage (seconds):,0.1580
-Conjugate Gradient,Iterations:,64,Residual:,7.779774213144414e-07,Time Usage (seconds):,0.0000
+Jacobi,Iterations:,6653,Residual:,9.982147272596698e-07,Time Usage (seconds):,0.1537
+Conjugate Gradient,Iterations:,64,Residual:,7.779774213144414e-07,Time Usage (seconds):,0.0029
 
 TOLERANCE : 1e-08
-Jacobi,Iterations:,8402,Residual:,9.979146048020758e-09,Time Usage (seconds):,0.1995
-Conjugate Gradient,Iterations:,72,Residual:,4.956059826876543e-09,Time Usage (seconds):,0.0006
+Jacobi,Iterations:,8402,Residual:,9.979146048020758e-09,Time Usage (seconds):,0.1831
+Conjugate Gradient,Iterations:,72,Residual:,4.956059826876543e-09,Time Usage (seconds):,0.0000
 
 TOLERANCE : 1e-10
-Jacobi,Iterations:,10150,Residual:,9.991801313552024e-11,Time Usage (seconds):,0.2658
+Jacobi,Iterations:,10150,Residual:,9.991801313552024e-11,Time Usage (seconds):,0.2653
 Conjugate Gradient,Iterations:,78,Residual:,4.999073397001137e-11,Time Usage (seconds):,0.0000
 --------------------------------------------------------------------------------
 

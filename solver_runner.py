@@ -10,6 +10,11 @@ from JacobiExecuter import JacobiExecuter
 from GaussSeidelExecuter import GaussSeidelExecuter
 from GradientExecuter import GradientExecuter
 from ConjugateGradientExecuter import ConjugateGradientExecuter
+import tkinter as tk
+from tkinter import ttk
+from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
+import matplotlib.pyplot as plt
+import seaborn as sns
 
 PATH = 'matrici'
 
@@ -77,42 +82,70 @@ def parse_data(results):
     return pd.DataFrame(parsed_data)
 
 def plot_results(df):
-    # Increase figure height to accommodate three subplots
-    plt.figure(figsize=(12, 18))
-    
+    # Create the root window
+    root = tk.Tk()
+    root.title('Matrix Solver Results')
+    root.geometry('1200x800')
+
+    # Create a frame for the canvas and scrollbar
+    frame = tk.Frame(root)
+    frame.pack(fill=tk.BOTH, expand=True)
+
+    # Create a canvas in the frame
+    canvas = tk.Canvas(frame)
+    canvas.pack(side=tk.LEFT, fill=tk.BOTH, expand=True)
+
+    # Add a scrollbar to the canvas
+    scrollbar = ttk.Scrollbar(frame, orient=tk.VERTICAL, command=canvas.yview)
+    scrollbar.pack(side=tk.RIGHT, fill=tk.Y)
+    canvas.configure(yscrollcommand=scrollbar.set)
+
+    # Create another frame inside the canvas
+    scrollable_frame = tk.Frame(canvas)
+    canvas.create_window((0, 0), window=scrollable_frame, anchor='nw')
+
+    def on_configure(event):
+        canvas.configure(scrollregion=canvas.bbox('all'))
+
+    scrollable_frame.bind('<Configure>', on_configure)
+
+    # Plotting in the scrollable frame
+    fig, axs = plt.subplots(3, 1, figsize=(12, 24))
+
     sns.set(style="whitegrid")
 
     # Plot time usage
-    plt.subplot(3, 1, 1)
     max_time = df['Time Usage (seconds)'].max()
-    sns.barplot(x='Matrix', y='Time Usage (seconds)', hue='Solver', data=df)
-    plt.title('Time Usage by Solver and Matrix')
-    plt.ylabel('Time Usage (seconds)')
-    plt.xlabel('Matrix')
-    plt.ylim(0, max_time * 1.1)  # Set ylim slightly above max time for better visualization
+    sns.barplot(x='Matrix', y='Time Usage (seconds)', hue='Solver', data=df, ax=axs[0])
+    axs[0].set_title('Time Usage by Solver and Matrix')
+    axs[0].set_ylabel('Time Usage (seconds)')
+    axs[0].set_xlabel('Matrix')
+    axs[0].set_ylim(0, max_time * 1.1)  # Set ylim slightly above max time for better visualization
     
     # Plot residual
-    plt.subplot(3, 1, 2)
     max_residual = df['Residual'].max()
-    sns.barplot(x='Matrix', y='Residual', hue='Solver', data=df)
-    plt.title('Residual by Solver and Matrix')
-    plt.ylabel('Residual')
-    plt.xlabel('Matrix')
-    plt.ylim(0, max_residual * 1.1)  # Set ylim slightly above max residual for better visualization
+    sns.barplot(x='Matrix', y='Residual', hue='Solver', data=df, ax=axs[1])
+    axs[1].set_title('Residual by Solver and Matrix')
+    axs[1].set_ylabel('Residual')
+    axs[1].set_xlabel('Matrix')
+    axs[1].set_ylim(0, max_residual * 1.1)  # Set ylim slightly above max residual for better visualization
 
     # Plot iterations
-    plt.subplot(3, 1, 3)
     max_iterations = df['Iterations'].max()
-    sns.barplot(x='Matrix', y='Iterations', hue='Solver', data=df)
-    plt.title('Iterations by Solver and Matrix')
-    plt.ylabel('Iterations')
-    plt.xlabel('Matrix')
-    plt.ylim(0, max_iterations * 1.1)  # Set ylim slightly above max iterations for better visualization
-    
-    # Adjust spacing between subplots
-    plt.tight_layout(pad=3.0)
-    
-    plt.show()
+    sns.barplot(x='Matrix', y='Iterations', hue='Solver', data=df, ax=axs[2])
+    axs[2].set_title('Iterations by Solver and Matrix')
+    axs[2].set_ylabel('Iterations')
+    axs[2].set_xlabel('Matrix')
+    axs[2].set_ylim(0, max_iterations * 1.1)  # Set ylim slightly above max iterations for better visualization
+
+    plt.tight_layout()
+
+    # Embed the plot into the Tkinter frame
+    canvas_plot = FigureCanvasTkAgg(fig, master=scrollable_frame)
+    canvas_plot.draw()
+    canvas_plot.get_tk_widget().pack(side=tk.TOP, fill=tk.BOTH, expand=True)
+
+    root.mainloop()
 
 
 if __name__ == "__main__":
