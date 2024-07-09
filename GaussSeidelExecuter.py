@@ -7,7 +7,7 @@ from Executer import Executer
 class GaussSeidelExecuter(Executer):
     def __init__(self, matrix: csc_matrix, tol: float, max_iter: int = 20000):
         super().__init__(matrix, tol, max_iter)
-        self.triang_inf = tril(matrix).tocsr()  
+        self.triang_inf = tril(matrix).tocsc()  
     
     def forward_substitution(self, L: csc_matrix, b: np.ndarray):
         """ Perform forward substitution to solve Ly = b for a lower triangular matrix L. """
@@ -22,7 +22,6 @@ class GaussSeidelExecuter(Executer):
     def update_function(self):
         r = self.b - self.matrix.dot(self.x)  # Compute residual r(k) = b - A * x(k)
         y = self.forward_substitution(self.triang_inf, r)  # Solve P * y = r(k) using forward substitution
-        xk = self.x + y  # Update x(k) = x(k) + y
-        
-        return xk, r
+        # self.x +y scope: update x(k) = x(k) + y
+        return self.x + y, r
     

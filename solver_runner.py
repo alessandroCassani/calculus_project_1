@@ -10,34 +10,43 @@ from GradientExecuter import GradientExecuter
 from ConjugateGradientExecuter import ConjugateGradientExecuter
 
 def run_matrix_solvers():
-    root_dir = "matrici"
     matrix_files = Utility.build_matrix_paths_list('matrici')
     tolerances = [1e-4, 1e-6, 1e-8, 1e-10]
     max_iterations = 20000
+    results = {}
 
     for matrix in matrix_files:
         A = Utility.read(matrix)
         if A is None:
             continue 
-
+        
+        matrix_results = {}
         for tol in tolerances:
-            print(f'\nSolving {matrix} with tolerance {tol}')
+            tol_results = {}
 
-            print('Jacobi resolution method')
-            jacobi = JacobiExecuter(A, tol, max_iterations)
-            jacobi.methodExecution()
+            solvers = [
+                ('Jacobi', JacobiExecuter(A, tol, max_iterations)),
+                ('Gauss-Seidel', GaussSeidelExecuter(A, tol, max_iterations)),
+                ('Gradient Descent', GradientExecuter(A, tol, max_iterations)),
+                ('Conjugate Gradient', ConjugateGradientExecuter(A, tol, max_iterations))
+            ]
 
-            print('\nGauss-Seidel resolution method')
-            gs = GaussSeidelExecuter(A, tol, max_iterations)
-            gs.methodExecution()
+            for solver_name, solver in solvers:
+                print(f'\nSolving {matrix} with tolerance {tol} using {solver_name}')
+                
+                start_time = time.time()
+                mem_usage = memory_usage((solver.methodExecution,), max_iterations=1)[0]
+                end_time = time.time()
 
-            print('\nGradient Descent resolution method')
-            gr = GradientExecuter(A, tol, max_iterations)
-            gr.methodExecution()
+                tol_results[solver_name] = {
+                    'Memory Usage (MB)': mem_usage,
+                    'Time Usage (seconds)': end_time - start_time
+                }
 
-            print('\nConjugate Gradient resolution method')
-            gr_con = ConjugateGradientExecuter(A, tol, max_iterations)
-            gr_con.methodExecution()
+            matrix_results[tol] = tol_results
+        results[matrix] = matrix_results
+        Utility.write_usage_csv('results/usage_data.csv', results)  
+
 
 def plot_memory_time_usage(memory_usage_data, time_usage_data):
     for matrix_file in memory_usage_data:

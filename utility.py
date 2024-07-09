@@ -35,10 +35,25 @@ class Utility:
         return matrici
     
     @staticmethod
-    def write_usage_csv(file_path, data):
+    def write_usage_csv(file_path, results):
         os.makedirs(os.path.dirname(file_path), exist_ok=True)
         with open(file_path, mode='w', newline='') as file:
-            writer = csv.DictWriter(file, fieldnames=['Matrix', 'Solver', 'Tolerance', 'Memory Usage (MB)', 'Time Usage (seconds)'])
-            writer.writeheader()
-            for entry in data:
-                writer.writerow(entry)
+            writer = csv.writer(file)
+            writer.writerow(['Matrix', 'Solver', 'Tolerance', 'Memory Usage (MB)', 'Time Usage (seconds)'])
+        
+            for matrix, matrix_results in results.items():
+                writer.writerow([])
+                writer.writerow([f'                     MATRIX: {matrix.split("\\")[-1]}'])
+                for tol, tol_results in matrix_results.items():
+                    writer.writerow([])
+                    writer.writerow([f'TOLERANCE : {tol}'])
+                    
+                    for solver, metrics in tol_results.items():
+                        writer.writerow([
+                        solver, ' Memory Usage (MB): '
+                        f"{ metrics['Memory Usage (MB)']:.2f}", 
+                        ' Time Usage (seconds): ' 
+                        f"{metrics['Time Usage (seconds)']:.4f}"
+                    ])
+                writer.writerow(['-'*80]) 
+                writer.writerow([])

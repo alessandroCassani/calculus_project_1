@@ -8,6 +8,6 @@ class JacobiExecuter(Executer):
         self.diagonal_inv = 1.0 / matrix.diagonal()  # Inverse of the diagonal elements
     
     def update_function(self):
-        r = self.b - self.matrix.dot(self.x)  # r(k) = b - A * x(k)
-        new_x = self.x + self.diagonal_inv * r  # x(k+1) = x(k) + P^-1 * r(k)
-        return new_x, r 
+        r = self.b - self.matrix.dot(self.x)  # Compute residual r(k) = b - A * x(k)
+        self.x += self.diagonal_inv * r  # Update x(k) in-place: x(k+1) = x(k) + D^-1 * r(k)
+        return self.x, r
