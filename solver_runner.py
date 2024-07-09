@@ -9,8 +9,10 @@ from GaussSeidelExecuter import GaussSeidelExecuter
 from GradientExecuter import GradientExecuter
 from ConjugateGradientExecuter import ConjugateGradientExecuter
 
+PATH = 'matrici'
+
 def run_matrix_solvers():
-    matrix_files = Utility.build_matrix_paths_list('matrici')
+    matrix_files = Utility.get_matrix_paths(PATH)
     tolerances = [1e-4, 1e-6, 1e-8, 1e-10]
     max_iterations = 20000
     results = {}

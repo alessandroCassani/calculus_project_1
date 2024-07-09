@@ -26,7 +26,7 @@ class Utility:
             print(f"Error: Could not open file {filename}. {e}")
             return None
         
-    def build_matrix_paths_list(directory):
+    def get_matrix_paths(directory):
         matrici = []
         for filename in os.listdir(directory):
             f = os.path.join(directory, filename)
