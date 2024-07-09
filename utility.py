@@ -27,6 +27,7 @@ class Utility:
             print(f"Error: Could not open file {filename}. {e}")
             return None
         
+    @staticmethod
     def get_matrix_paths(directory):
         matrici = []
         for filename in os.listdir(directory):
@@ -40,22 +41,22 @@ class Utility:
         os.makedirs(os.path.dirname(file_path), exist_ok=True)
         with open(file_path, mode='w', newline='') as file:
             writer = csv.writer(file)
-            writer.writerow(['Matrix', 'Solver', 'Tolerance', 'Memory Usage (MB)', 'Time Usage (seconds)'])
+            writer.writerow(['Matrix', 'Solver', 'Tolerance', 'Iterations', 'Residual', 'Time Usage (seconds)'])
         
             for matrix, matrix_results in results.items():
                 writer.writerow([])
-                writer.writerow([f'                     MATRIX: {matrix.split("\\")[-1]}'])
+                writer.writerow([f'                     MATRIX: {matrix.split(os.sep)[-1]}'])
                 for tol, tol_results in matrix_results.items():
                     writer.writerow([])
                     writer.writerow([f'TOLERANCE : {tol}'])
                     
                     for solver, metrics in tol_results.items():
                         writer.writerow([
-                        solver, ' Memory Usage (MB): '
-                        f"{ metrics['Memory Usage (MB)']:.2f}", 
-                        ' Time Usage (seconds): ' 
-                        f"{metrics['Time Usage (seconds)']:.4f}"
-                    ])
+                            solver, 
+                            'Iterations:', metrics['Iterations'], 
+                            'Residual:', metrics['Residual'],
+                            'Time Usage (seconds):', f"{metrics['Time Usage (seconds)']:.4f}"
+                        ])
                 writer.writerow(['-'*80]) 
                 writer.writerow([])
      
@@ -69,7 +70,6 @@ class Utility:
         except LinAlgError:
             return False
 
-
     @staticmethod
     def is_symmetric(matrix: csc_matrix):
         """Check if a sparse matrix is symmetric."""
@@ -82,4 +82,4 @@ class Utility:
     
     @staticmethod
     def matrix_checks(matrix: csc_matrix):
-        return Utility.is_positive_definite(matrix) &  Utility.is_symmetric(matrix)
+        return Utility.is_positive_definite(matrix) and Utility.is_symmetric(matrix)

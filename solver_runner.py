@@ -35,8 +35,8 @@ def run_matrix_solvers():
 
             solvers = [
                 ('Jacobi', JacobiExecuter(A, tol, max_iterations)),
-                ('Gauss-Seidel', GaussSeidelExecuter(A, tol, max_iterations)),
-                ('Gradient Descent', GradientExecuter(A, tol, max_iterations)),
+                #('Gauss-Seidel', GaussSeidelExecuter(A, tol, max_iterations)),
+                #('Gradient Descent', GradientExecuter(A, tol, max_iterations)),
                 ('Conjugate Gradient', ConjugateGradientExecuter(A, tol, max_iterations))
             ]
             
@@ -44,22 +44,20 @@ def run_matrix_solvers():
                 print(f'\nSolving {matrix} with tolerance {tol} using {solver_name}')
                 
                 start_time = time.time()
-                mem_usage = memory_usage((solver.methodExecution,), max_iterations=1)[0]
+                counter, residual_norm = solver.method_execution()
                 end_time = time.time()
-                _, iterations, residual_norm = solver.methodExecution()
 
                 tol_results[solver_name] = {
-                    'Memory Usage (MB)': mem_usage,
-                    'Time Usage (seconds)': end_time - start_time,
-                    'Iterations': iterations,
-                    'Residual Norm': residual_norm
+                    'Iterations': counter,
+                    'Residual': residual_norm,
+                    'Time Usage (seconds)': end_time - start_time
                 }
 
             matrix_results[tol] = tol_results
         results[matrix] = matrix_results
 
     # Write the results to CSV
-    Utility.write_usage_csv('results1/usage_data.csv', results)
+    Utility.write_usage_csv('results1/usage_data1.csv', results)
     
     return results
 
@@ -72,48 +70,50 @@ def parse_data(results):
                     'Matrix': matrix,
                     'Solver': solver,
                     'Tolerance': tol,
-                    'Memory Usage (MB)': metrics['Memory Usage (MB)'],
-                    'Time Usage (seconds)': metrics['Time Usage (seconds)'],
                     'Iterations': metrics['Iterations'],
-                    'Residual Norm': metrics['Residual Norm']
+                    'Residual': metrics['Residual'],
+                    'Time Usage (seconds)': metrics['Time Usage (seconds)']
                 })
     return pd.DataFrame(parsed_data)
 
 def plot_results(df):
-    plt.figure(figsize=(12, 16))
+    # Increase figure height to accommodate three subplots
+    plt.figure(figsize=(12, 18))
     
     sns.set(style="whitegrid")
 
     # Plot time usage
-    plt.subplot(4, 1, 1)
+    plt.subplot(3, 1, 1)
+    max_time = df['Time Usage (seconds)'].max()
     sns.barplot(x='Matrix', y='Time Usage (seconds)', hue='Solver', data=df)
     plt.title('Time Usage by Solver and Matrix')
     plt.ylabel('Time Usage (seconds)')
     plt.xlabel('Matrix')
-
-    # Plot memory usage
-    plt.subplot(4, 1, 2)
-    sns.barplot(x='Matrix', y='Memory Usage (MB)', hue='Solver', data=df)
-    plt.title('Memory Usage by Solver and Matrix')
-    plt.ylabel('Memory Usage (MB)')
+    plt.ylim(0, max_time * 1.1)  # Set ylim slightly above max time for better visualization
+    
+    # Plot residual
+    plt.subplot(3, 1, 2)
+    max_residual = df['Residual'].max()
+    sns.barplot(x='Matrix', y='Residual', hue='Solver', data=df)
+    plt.title('Residual by Solver and Matrix')
+    plt.ylabel('Residual')
     plt.xlabel('Matrix')
+    plt.ylim(0, max_residual * 1.1)  # Set ylim slightly above max residual for better visualization
 
-    # Plot number of iterations
-    plt.subplot(4, 1, 3)
+    # Plot iterations
+    plt.subplot(3, 1, 3)
+    max_iterations = df['Iterations'].max()
     sns.barplot(x='Matrix', y='Iterations', hue='Solver', data=df)
     plt.title('Iterations by Solver and Matrix')
     plt.ylabel('Iterations')
     plt.xlabel('Matrix')
-
-    # Plot residual norm
-    plt.subplot(4, 1, 4)
-    sns.barplot(x='Matrix', y='Residual Norm', hue='Solver', data=df)
-    plt.title('Residual Norm by Solver and Matrix')
-    plt.ylabel('Residual Norm')
-    plt.xlabel('Matrix')
+    plt.ylim(0, max_iterations * 1.1)  # Set ylim slightly above max iterations for better visualization
     
-    plt.tight_layout()
+    # Adjust spacing between subplots
+    plt.tight_layout(pad=3.0)
+    
     plt.show()
+
 
 if __name__ == "__main__":
     results = run_matrix_solvers()
