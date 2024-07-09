@@ -1,9 +1,10 @@
 import numpy as np
 import scipy.sparse as sp
-from scipy.sparse import csc_matrix, lil_matrix
+from scipy.sparse import csc_matrix
 from scipy.io import mmread
 import os
 import csv  
+from scipy.linalg import cholesky, LinAlgError
 
 class Utility:
     
@@ -57,3 +58,28 @@ class Utility:
                     ])
                 writer.writerow(['-'*80]) 
                 writer.writerow([])
+     
+    @staticmethod           
+    def is_positive_definite(matrix: csc_matrix):
+        """Check if a sparse matrix is positive definite."""
+        try:
+            # Attempt Cholesky decomposition
+            _ = cholesky(matrix.toarray(), lower=True)
+            return True
+        except LinAlgError:
+            return False
+
+
+    @staticmethod
+    def is_symmetric(matrix):
+        """Check if a sparse matrix is symmetric."""
+        if not matrix.shape[0] == matrix.shape[1]:
+            return False  # Sparse matrix must be square to be symmetric
+    
+        # Check if the matrix is identical to its transpose
+        transpose = matrix.transpose()
+        return matrix.shape == transpose.shape and np.allclose(matrix.toarray(), transpose.toarray())
+    
+    @staticmethod
+    def matrix_checks(matrix):
+        return Utility.is_positive_definite(matrix) &  Utility.is_symmetric(matrix)

@@ -49,35 +49,5 @@ def run_matrix_solvers():
         results[matrix] = matrix_results
         Utility.write_usage_csv('results/usage_data.csv', results)  
 
-
-def plot_memory_time_usage(memory_usage_data, time_usage_data):
-    for matrix_file in memory_usage_data:
-        for tol in memory_usage_data[matrix_file]:
-            solvers = list(memory_usage_data[matrix_file][tol].keys())
-            memory_usages = [memory_usage_data[matrix_file][tol][solver] for solver in solvers]
-            time_usages = [time_usage_data[matrix_file][tol][solver] for solver in solvers]
-
-            # Plot memory usage
-            plt.figure(figsize=(12, 6))
-            plt.bar(solvers, memory_usages, color='skyblue')
-            plt.xlabel('Solver')
-            plt.ylabel('Memory Usage (MB)')
-            plt.title(f'Memory Usage for {matrix_file} with tolerance {tol}')
-            plt.xticks(rotation=45)
-            plt.tight_layout()
-            plt.savefig(f'memory_usage_{os.path.basename(matrix_file)}_tol_{tol}.png')
-            plt.close()
-
-            # Plot time usage
-            plt.figure(figsize=(12, 6))
-            plt.bar(solvers, time_usages, color='salmon')
-            plt.xlabel('Solver')
-            plt.ylabel('Time Usage (seconds)')
-            plt.title(f'Time Usage for {matrix_file} with tolerance {tol}')
-            plt.xticks(rotation=45)
-            plt.tight_layout()
-            plt.savefig(f'time_usage_{os.path.basename(matrix_file)}_tol_{tol}.png')
-            plt.close()
-
 if __name__ == "__main__":
     run_matrix_solvers()
