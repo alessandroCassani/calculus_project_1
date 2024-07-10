@@ -1,113 +1,81 @@
-Matrix,Solver,Tolerance,Memory Usage (MB),Time Usage (seconds)
+Matrix,Solver,Tolerance,Iterations,Residual,Time Usage (seconds)
 
                      MATRIX: spa1.mtx
 
 TOLERANCE : 0.0001
-Jacobi, Memory Usage (MB): 105.76, Time Usage (seconds): 1.4095
-Gauss-Seidel, Memory Usage (MB): 105.84, Time Usage (seconds): 3.6003
-Gradient Descent, Memory Usage (MB): 106.20, Time Usage (seconds): 3.3866
-Conjugate Gradient, Memory Usage (MB): 106.22, Time Usage (seconds): 1.4843
+Jacobi,Iterations:,181,Residual:,9.649907454818539e-05,Time Usage (seconds): 0.019689999986439943
+Conjugate Gradient,Iterations:,165,Residual:,8.374911600201817e-05,Time Usage (seconds): 0.03762049996294081
 
 TOLERANCE : 1e-06
-Jacobi, Memory Usage (MB): 106.04, Time Usage (seconds): 1.5420
-Gauss-Seidel, Memory Usage (MB): 106.04, Time Usage (seconds): 3.5968
-Gradient Descent, Memory Usage (MB): 106.04, Time Usage (seconds): 4.7424
-Conjugate Gradient, Memory Usage (MB): 106.05, Time Usage (seconds): 1.5047
+Jacobi,Iterations:,247,Residual:,9.795087350463614e-07,Time Usage (seconds): 0.030280499951913953
+Conjugate Gradient,Iterations:,186,Residual:,9.605362861832144e-07,Time Usage (seconds): 0.04895239998586476
 
 TOLERANCE : 1e-08
-Jacobi, Memory Usage (MB): 106.73, Time Usage (seconds): 1.2007
-Gauss-Seidel, Memory Usage (MB): 106.73, Time Usage (seconds): 3.9831
-Gradient Descent, Memory Usage (MB): 106.75, Time Usage (seconds): 4.8560
-Conjugate Gradient, Memory Usage (MB): 106.74, Time Usage (seconds): 1.1434
+Jacobi,Iterations:,313,Residual:,9.942421558252864e-09,Time Usage (seconds): 0.044154200004413724
+Conjugate Gradient,Iterations:,208,Residual:,9.991613790165245e-09,Time Usage (seconds): 0.05828190001193434
 
 TOLERANCE : 1e-10
-Jacobi, Memory Usage (MB): 106.04, Time Usage (seconds): 1.1343
-Gauss-Seidel, Memory Usage (MB): 106.04, Time Usage (seconds): 4.5515
-Gradient Descent, Memory Usage (MB): 106.04, Time Usage (seconds): 4.9835
-Conjugate Gradient, Memory Usage (MB): 106.04, Time Usage (seconds): 1.2148
+Jacobi,Iterations:,380,Residual:,9.412852994533572e-11,Time Usage (seconds): 0.04856639995705336
+Conjugate Gradient,Iterations:,231,Residual:,9.149435837536692e-11,Time Usage (seconds): 0.06197399995289743
 --------------------------------------------------------------------------------
 
 
                      MATRIX: spa2.mtx
 
 TOLERANCE : 0.0001
-Jacobi, Memory Usage (MB): 136.01, Time Usage (seconds): 1.3423
-Gauss-Seidel, Memory Usage (MB): 136.06, Time Usage (seconds): 12.0231
-Gradient Descent, Memory Usage (MB): 136.92, Time Usage (seconds): 14.8667
-Conjugate Gradient, Memory Usage (MB): 136.92, Time Usage (seconds): 1.5575
+Jacobi,Iterations:,59,Residual:,9.30851381929731e-05,Time Usage (seconds): 0.10512630001176149
+Conjugate Gradient,Iterations:,190,Residual:,9.883565415587824e-05,Time Usage (seconds): 0.5484188999980688
 
 TOLERANCE : 1e-06
-Jacobi, Memory Usage (MB): 137.12, Time Usage (seconds): 1.2307
-Gauss-Seidel, Memory Usage (MB): 137.13, Time Usage (seconds): 15.0690
-Gradient Descent, Memory Usage (MB): 137.14, Time Usage (seconds): 22.5668
-Conjugate Gradient, Memory Usage (MB): 137.14, Time Usage (seconds): 1.6822
+Jacobi,Iterations:,80,Residual:,8.784177115699665e-07,Time Usage (seconds): 0.17017250007484108
+Conjugate Gradient,Iterations:,233,Residual:,9.91361406608428e-07,Time Usage (seconds): 0.5943675999296829
 
 TOLERANCE : 1e-08
-Jacobi, Memory Usage (MB): 137.26, Time Usage (seconds): 1.2845
-Gauss-Seidel, Memory Usage (MB): 137.27, Time Usage (seconds): 19.2007
-Gradient Descent, Memory Usage (MB): 137.23, Time Usage (seconds): 28.9167
-Conjugate Gradient, Memory Usage (MB): 137.23, Time Usage (seconds): 1.7488
+Jacobi,Iterations:,101,Residual:,8.289365550670778e-09,Time Usage (seconds): 0.1651117999572307
+Conjugate Gradient,Iterations:,286,Residual:,9.021112768849923e-09,Time Usage (seconds): 0.7770636000204831
 
 TOLERANCE : 1e-10
-Jacobi, Memory Usage (MB): 137.32, Time Usage (seconds): 1.2702
-Gauss-Seidel, Memory Usage (MB): 137.32, Time Usage (seconds): 22.8791
-Gradient Descent, Memory Usage (MB): 137.32, Time Usage (seconds): 37.4313
-Conjugate Gradient, Memory Usage (MB): 137.33, Time Usage (seconds): 1.8387
+Jacobi,Iterations:,121,Residual:,9.765679819283832e-11,Time Usage (seconds): 0.2626244000857696
+Conjugate Gradient,Iterations:,329,Residual:,9.290627475249494e-11,Time Usage (seconds): 0.8841699999757111
 --------------------------------------------------------------------------------
 
 
                      MATRIX: vem1.mtx
 
 TOLERANCE : 0.0001
-Jacobi, Memory Usage (MB): 109.73, Time Usage (seconds): 1.2305
-Gauss-Seidel, Memory Usage (MB): 109.73, Time Usage (seconds): 106.7136
-Gradient Descent, Memory Usage (MB): 105.41, Time Usage (seconds): 1.2662
-Conjugate Gradient, Memory Usage (MB): 105.42, Time Usage (seconds): 1.1429
+Jacobi,Iterations:,3084,Residual:,9.959448785619115e-05,Time Usage (seconds): 0.05842209991533309
+Conjugate Gradient,Iterations:,43,Residual:,6.417058301408412e-05,Time Usage (seconds): 0.0032574000069871545
 
 TOLERANCE : 1e-06
-Jacobi, Memory Usage (MB): 105.43, Time Usage (seconds): 1.2260
-Gauss-Seidel, Memory Usage (MB): 105.45, Time Usage (seconds): 144.3921
-Gradient Descent, Memory Usage (MB): 105.45, Time Usage (seconds): 1.2754
-Conjugate Gradient, Memory Usage (MB): 105.45, Time Usage (seconds): 1.1364
+Jacobi,Iterations:,4202,Residual:,9.99965225642342e-07,Time Usage (seconds): 0.08009209996089339
+Conjugate Gradient,Iterations:,51,Residual:,6.513616733546936e-07,Time Usage (seconds): 0.0020602999720722437
 
 TOLERANCE : 1e-08
-Jacobi, Memory Usage (MB): 105.45, Time Usage (seconds): 1.2893
-Gauss-Seidel, Memory Usage (MB): 105.45, Time Usage (seconds): 183.4942
-Gradient Descent, Memory Usage (MB): 105.48, Time Usage (seconds): 1.4522
-Conjugate Gradient, Memory Usage (MB): 105.48, Time Usage (seconds): 1.2972
+Jacobi,Iterations:,5321,Residual:,9.998746030405861e-09,Time Usage (seconds): 0.09350780001841486
+Conjugate Gradient,Iterations:,57,Residual:,6.147368663576901e-09,Time Usage (seconds): 0.0025541000068187714
 
 TOLERANCE : 1e-10
-Jacobi, Memory Usage (MB): 105.48, Time Usage (seconds): 1.2378
-Gauss-Seidel, Memory Usage (MB): 105.48, Time Usage (seconds): 231.0390
-Gradient Descent, Memory Usage (MB): 105.53, Time Usage (seconds): 1.3090
-Conjugate Gradient, Memory Usage (MB): 105.53, Time Usage (seconds): 1.1604
+Jacobi,Iterations:,6440,Residual:,9.993152388751711e-11,Time Usage (seconds): 0.12508680007886142
+Conjugate Gradient,Iterations:,62,Residual:,4.4383589825160835e-11,Time Usage (seconds): 0.002484500058926642
 --------------------------------------------------------------------------------
 
 
                      MATRIX: vem2.mtx
 
 TOLERANCE : 0.0001
-Jacobi, Memory Usage (MB): 109.33, Time Usage (seconds): 1.3618
-Gauss-Seidel, Memory Usage (MB): 109.33, Time Usage (seconds): 276.2338
-Gradient Descent, Memory Usage (MB): 109.33, Time Usage (seconds): 1.3060
-Conjugate Gradient, Memory Usage (MB): 109.33, Time Usage (seconds): 1.1351
+Jacobi,Iterations:,4904,Residual:,9.98501606494579e-05,Time Usage (seconds): 0.13230629998724908
+Conjugate Gradient,Iterations:,54,Residual:,7.337183922168505e-05,Time Usage (seconds): 0.002540999907068908
 
 TOLERANCE : 1e-06
-Jacobi, Memory Usage (MB): 109.39, Time Usage (seconds): 1.2986
-Gauss-Seidel, Memory Usage (MB): 109.39, Time Usage (seconds): 371.3792
-Gradient Descent, Memory Usage (MB): 104.29, Time Usage (seconds): 1.3628
-Conjugate Gradient, Memory Usage (MB): 104.30, Time Usage (seconds): 1.1795
+Jacobi,Iterations:,6653,Residual:,9.982147272596698e-07,Time Usage (seconds): 0.15768059995025396
+Conjugate Gradient,Iterations:,64,Residual:,7.779774213144414e-07,Time Usage (seconds): 0.002882499946281314
 
 TOLERANCE : 1e-08
-Jacobi, Memory Usage (MB): 104.34, Time Usage (seconds): 1.3041
-Gauss-Seidel, Memory Usage (MB): 104.34, Time Usage (seconds): 468.8574
-Gradient Descent, Memory Usage (MB): 104.42, Time Usage (seconds): 1.4349
-Conjugate Gradient, Memory Usage (MB): 104.42, Time Usage (seconds): 1.2632
+Jacobi,Iterations:,8402,Residual:,9.979146048020758e-09,Time Usage (seconds): 0.2072443999350071
+Conjugate Gradient,Iterations:,72,Residual:,4.956059826876543e-09,Time Usage (seconds): 0.0029588999459519982
 
 TOLERANCE : 1e-10
-Jacobi, Memory Usage (MB): 104.44, Time Usage (seconds): 1.6038
-Gauss-Seidel, Memory Usage (MB): 104.44, Time Usage (seconds): 568.3006
-Gradient Descent, Memory Usage (MB): 104.43, Time Usage (seconds): 1.4664
-Conjugate Gradient, Memory Usage (MB): 104.44, Time Usage (seconds): 1.1637
+Jacobi,Iterations:,10150,Residual:,9.991801313552024e-11,Time Usage (seconds): 0.2517124000005424
+Conjugate Gradient,Iterations:,78,Residual:,4.999073397001137e-11,Time Usage (seconds): 0.0031943999929353595
 --------------------------------------------------------------------------------
 

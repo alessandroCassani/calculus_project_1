@@ -29,7 +29,7 @@ def run_matrix_solvers():
         
         if Utility.matrix_checks(A) is False:
             print('incorrect matrix')
-            return
+            continue
         
         if A is None:
             continue 
@@ -40,29 +40,29 @@ def run_matrix_solvers():
 
             solvers = [
                 ('Jacobi', JacobiExecuter(A, tol, max_iterations)),
-                #('Gauss-Seidel', GaussSeidelExecuter(A, tol, max_iterations)),
-                #('Gradient Descent', GradientExecuter(A, tol, max_iterations)),
                 ('Conjugate Gradient', ConjugateGradientExecuter(A, tol, max_iterations))
             ]
             
             for solver_name, solver in solvers:
                 print(f'\nSolving {matrix} with tolerance {tol} using {solver_name}')
                 
-                start_time = time.time()
+                start_time = time.perf_counter()
                 counter, residual_norm = solver.method_execution()
-                end_time = time.time()
+                end_time = time.perf_counter()
+                time_usage = end_time - start_time
+                print(f'{solver_name} solver finished in {time_usage:.6f} seconds with residual {residual_norm} and iterations {counter}')
 
                 tol_results[solver_name] = {
                     'Iterations': counter,
                     'Residual': residual_norm,
-                    'Time Usage (seconds)': end_time - start_time
+                    'Time Usage (seconds)': time_usage
                 }
 
             matrix_results[tol] = tol_results
         results[matrix] = matrix_results
 
     # Write the results to CSV
-    Utility.write_usage_csv('results1/usage_data1.csv', results)
+    Utility.write_usage_csv('results/usage_data.csv', results)
     
     return results
 
@@ -179,9 +179,7 @@ def plot_results(df):
 
     root.mainloop()
 
-
 if __name__ == "__main__":
     results = run_matrix_solvers()
-    
     data = parse_data(results)
     plot_results(data)
