@@ -5,18 +5,11 @@ import time
 import matplotlib.pyplot as plt
 import seaborn as sns
 import pandas as pd
-from memory_profiler import memory_usage
 from JacobiExecuter import JacobiExecuter
-from GaussSeidelExecuter import GaussSeidelExecuter
-from GradientExecuter import GradientExecuter
 from ConjugateGradientExecuter import ConjugateGradientExecuter
-import tkinter as tk
-from tkinter import ttk
-from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
-import matplotlib.pyplot as plt
-import seaborn as sns
 
 PATH = 'matrici'
+RESULTS_DIR = 'results'
 
 def run_matrix_solvers():
     matrix_files = Utility.get_matrix_paths(PATH)
@@ -63,7 +56,7 @@ def run_matrix_solvers():
         results[matrix] = matrix_results
 
     # Write the results to CSV
-    Utility.write_usage_csv('results/usage_data.csv', results)
+    Utility.write_usage_csv(os.path.join(RESULTS_DIR, 'usage_data.csv'), results)
     
     return results
 
@@ -84,98 +77,71 @@ def parse_data(results):
     return pd.DataFrame(parsed_data)
 
 def plot_results(df):
-    # Create the root window
-    root = tk.Tk()
-    root.title('Matrix Solver Results')
-    root.geometry('1200x800')
-
-    # Create a frame for the canvas and scrollbar
-    frame = tk.Frame(root)
-    frame.pack(fill=tk.BOTH, expand=True)
-
-    # Create a canvas in the frame
-    canvas = tk.Canvas(frame)
-    canvas.pack(side=tk.LEFT, fill=tk.BOTH, expand=True)
-
-    # Add a scrollbar to the canvas
-    scrollbar = ttk.Scrollbar(frame, orient=tk.VERTICAL, command=canvas.yview)
-    scrollbar.pack(side=tk.RIGHT, fill=tk.Y)
-    canvas.configure(yscrollcommand=scrollbar.set)
-
-    # Create another frame inside the canvas
-    scrollable_frame = tk.Frame(canvas)
-    canvas.create_window((0, 0), window=scrollable_frame, anchor='nw')
-
-    def on_configure(event):
-        canvas.configure(scrollregion=canvas.bbox('all'))
-        if scrollable_frame.winfo_width() != canvas.winfo_width():
-            canvas.itemconfigure('window', width=canvas.winfo_width())
-
-    scrollable_frame.bind('<Configure>', on_configure)
+    # Ensure the results directory exists
+    if not os.path.exists(RESULTS_DIR):
+        os.makedirs(RESULTS_DIR)
 
     sns.set(style="whitegrid")
 
     # Get unique matrices
     matrices = df['Matrix'].unique()
 
-    for idx, matrix in enumerate(matrices):
+    for matrix in matrices:
         matrix_df = df[df['Matrix'] == matrix]
 
-        fig, axs = plt.subplots(4, 1, figsize=(12, 24))  # Ensure you have enough subplots
+        fig, axs = plt.subplots(3, 1, figsize=(12, 18))  # Time, Residual, Iterations
         fig.suptitle(f'Results for Matrix: {matrix}', fontsize=16)
 
         # Sort the tolerances in descending order
         matrix_df = matrix_df.sort_values(by='Tolerance', ascending=False)
 
         # Plot time usage
-        max_time = matrix_df['Time Usage (seconds)'].max()
-        barplot = sns.barplot(x='Tolerance', y='Time Usage (seconds)', hue='Solver', data=matrix_df, ax=axs[0])
+        sns.barplot(x='Tolerance', y='Time Usage (seconds)', hue='Solver', data=matrix_df, ax=axs[0])
         axs[0].set_title('Time Usage by Solver and Tolerance')
         axs[0].set_ylabel('Time Usage (seconds)')
         axs[0].set_xlabel('Tolerance')
-        axs[0].set_ylim(0, max_time * 1.1)  # Set ylim slightly above max time for better visualization
 
         # Plot residual
-        max_residual = matrix_df['Residual'].max()
-        min_residual = matrix_df['Residual'].min()
-        barplot = sns.barplot(x='Tolerance', y='Residual', hue='Solver', data=matrix_df, ax=axs[1])
+        sns.barplot(x='Tolerance', y='Residual', hue='Solver', data=matrix_df, ax=axs[1])
         axs[1].set_title('Residual by Solver and Tolerance')
         axs[1].set_ylabel('Residual')
         axs[1].set_xlabel('Tolerance')
         axs[1].set_yscale('log')
-        axs[1].set_ylim(min_residual * 0.1, max_residual * 1.1)
         axs[1].yaxis.set_major_formatter(plt.FuncFormatter(lambda x, _: f'{x:.1e}'))
 
         # Plot iterations
-        max_iterations = matrix_df['Iterations'].max()
-        barplot = sns.barplot(x='Tolerance', y='Iterations', hue='Solver', data=matrix_df, ax=axs[2])
+        sns.barplot(x='Tolerance', y='Iterations', hue='Solver', data=matrix_df, ax=axs[2])
         axs[2].set_title('Iterations by Solver and Tolerance')
         axs[2].set_ylabel('Iterations')
         axs[2].set_xlabel('Tolerance')
-        axs[2].set_ylim(0, max_iterations * 1.1)  # Set ylim slightly above max iterations for better visualization
 
-        # Plot residuals over iterations
-        for index, row in matrix_df.iterrows():
-            residuals = row['List of residuals']
-            iterations = np.arange(len(residuals))
+        fig.subplots_adjust(top=0.96, bottom=0.04, left=0.06, right=0.98, hspace=0.3)
+        
+        # Save the time, residual, and iterations plot
+        plot_path = os.path.join(RESULTS_DIR, f'{os.path.basename(matrix)}_summary.png')
+        plt.savefig(plot_path)
+        plt.close(fig)
 
-            axs[3].plot(iterations, residuals, label=row['Solver'])  # Use axs[3] for residual plot
+        # Plot cumulative residuals over iterations for each tolerance level
+        for tol in matrix_df['Tolerance'].unique():
+            tol_df = matrix_df[matrix_df['Tolerance'] == tol]
 
-        axs[3].set_title('Residual Progression by Solver')
-        axs[3].set_ylabel('Residual')
-        axs[3].set_xlabel('Iteration')
-        axs[3].set_yscale('log')
-        axs[3].legend()
+            fig, ax = plt.subplots(figsize=(12, 8))
+            ax.set_title(f'Cumulative Residual Progression for Matrix: {matrix} with Tolerance: {tol}', fontsize=16)
 
-        plt.tight_layout(rect=[0, 0, 1, 0.96])
+            for solver in tol_df['Solver'].unique():
+                solver_df = tol_df[tol_df['Solver'] == solver]
+                combined_residuals = np.concatenate(solver_df['List of residuals'].values)
+                cumulative_residuals = np.cumsum(combined_residuals)
 
-        # Embed the plot into the Tkinter frame
-        canvas_plot = FigureCanvasTkAgg(fig, master=scrollable_frame)
-        canvas_plot.draw()
-        canvas_plot.get_tk_widget().pack(side=tk.TOP, fill=tk.BOTH, expand=True)
+                ax.plot(cumulative_residuals, label=solver)
+                ax.set_ylabel('Cumulative Residual')
+                ax.set_xlabel('Iteration')
 
-    root.mainloop()
-
+            ax.legend(loc="upper right")
+            plot_path = os.path.join(RESULTS_DIR, f'{os.path.basename(matrix)}_cumulative_residuals_tol_{tol}.png')
+            plt.savefig(plot_path)
+            plt.close(fig)
 
 if __name__ == "__main__":
     results = run_matrix_solvers()
