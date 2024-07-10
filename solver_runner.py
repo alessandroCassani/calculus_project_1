@@ -77,6 +77,8 @@ def parse_data(results):
                 })
     return pd.DataFrame(parsed_data)
 
+import matplotlib as mpl
+
 def plot_results(df, specific_tolerance=1e-6):
     # Ensure the results directory exists
     if not os.path.exists(RESULTS_DIR):
@@ -124,35 +126,6 @@ def plot_results(df, specific_tolerance=1e-6):
         plot_path = os.path.join(RESULTS_DIR, f'{os.path.basename(matrix)}_residuals_tolerance_{specific_tolerance}.png')
         plt.savefig(plot_path)
         plt.close(fig)
-
-
-        fig.subplots_adjust(top=0.96, bottom=0.04, left=0.06, right=0.98, hspace=0.3)
-        
-        # Save the time, residual, and iterations plot
-        plot_path = os.path.join(RESULTS_DIR, f'{os.path.basename(matrix)}_summary.png')
-        plt.savefig(plot_path)
-        plt.close(fig)
-
-        # Plot cumulative residuals over iterations for each tolerance level
-        for tol in matrix_df['Tolerance'].unique():
-            tol_df = matrix_df[matrix_df['Tolerance'] == tol]
-
-            fig, ax = plt.subplots(figsize=(12, 8))
-            ax.set_title(f'Cumulative Residual Progression for Matrix: {matrix} with Tolerance: {tol}', fontsize=16)
-
-            for solver in tol_df['Solver'].unique():
-                solver_df = tol_df[tol_df['Solver'] == solver]
-                combined_residuals = np.concatenate(solver_df['List of residuals'].values)
-                cumulative_residuals = np.cumsum(combined_residuals)
-
-                ax.plot(cumulative_residuals, label=solver)
-                ax.set_ylabel('Cumulative Residual')
-                ax.set_xlabel('Iteration')
-
-            ax.legend(loc="upper right")
-            plot_path = os.path.join(RESULTS_DIR, f'{os.path.basename(matrix)}_cumulative_residuals_tol_{tol}.png')
-            plt.savefig(plot_path)
-            plt.close(fig)
 
 if __name__ == "__main__":
     results = run_matrix_solvers()
