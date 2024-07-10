@@ -54,9 +54,10 @@ class Utility:
                         writer.writerow([
                             solver, 
                             'Iterations:', metrics['Iterations'], 
-                            'Residual:', metrics['Residual'],
-                            'Time Usage (seconds):', f"{metrics['Time Usage (seconds)']:.2f}"
+                             'Residual:', metrics['Residual'],
+                            f'Time Usage (seconds): {metrics['Time Usage (seconds)']}'
                         ])
+                        
                 writer.writerow(['-'*80]) 
                 writer.writerow([])
      

@@ -134,7 +134,7 @@ def plot_results(df):
         axs[0].set_ylim(0, max_time * 1.1)  # Set ylim slightly above max time for better visualization
 
         for container in axs[0].containers:
-            axs[0].bar_label(container, fmt='%.2f')
+            axs[0].bar_label(container)
 
         for patch in barplot.patches:
             patch.set_edgecolor(patch.get_facecolor())

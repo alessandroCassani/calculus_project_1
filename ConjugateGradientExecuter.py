@@ -14,7 +14,7 @@ class ConjugateGradientExecuter(Executer):
         
         # Initialization of p(0)
         if self.r_old is None or self.p_old is None:
-            p = self.residual.copy()
+            p = self.residual
         else:
             # Compute beta
             beta = np.dot(self.residual, self.residual) / np.dot(self.r_old, self.r_old)
@@ -35,4 +35,3 @@ class ConjugateGradientExecuter(Executer):
         self.p_old = p
         
         return self.x, self.residual
-
