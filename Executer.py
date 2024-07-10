@@ -18,7 +18,6 @@ class Executer(ABC):
         self.diagonal_inv = 1.0 / self.matrix.diagonal()
 
     def method_execution(self):
-        start = time.time()
         residual_norm = np.inf  # Initialize residual_norm
 
         for self.counter in range(self.iterations):
@@ -31,8 +30,6 @@ class Executer(ABC):
         else:
             print(f'{self.__class__.__name__}: Did not converge within {self.iterations} iterations')
 
-        end = time.time() - start
-        self.execution_timer = end
         return self.counter, residual_norm
 
     @abstractmethod
