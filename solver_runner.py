@@ -121,7 +121,7 @@ def plot_results(df):
     for idx, matrix in enumerate(matrices):
         matrix_df = df[df['Matrix'] == matrix]
 
-        fig, axs = plt.subplots(3, 1, figsize=(12, 24))
+        fig, axs = plt.subplots(4, 1, figsize=(12, 24))  # Ensure you have enough subplots
         fig.suptitle(f'Results for Matrix: {matrix}', fontsize=16)
 
         # Sort the tolerances in descending order
@@ -135,12 +135,6 @@ def plot_results(df):
         axs[0].set_xlabel('Tolerance')
         axs[0].set_ylim(0, max_time * 1.1)  # Set ylim slightly above max time for better visualization
 
-        for container in axs[0].containers:
-            axs[0].bar_label(container)
-
-        for patch in barplot.patches:
-            patch.set_edgecolor(patch.get_facecolor())
-
         # Plot residual
         max_residual = matrix_df['Residual'].max()
         min_residual = matrix_df['Residual'].min()
@@ -152,12 +146,6 @@ def plot_results(df):
         axs[1].set_ylim(min_residual * 0.1, max_residual * 1.1)
         axs[1].yaxis.set_major_formatter(plt.FuncFormatter(lambda x, _: f'{x:.1e}'))
 
-        for container in axs[1].containers:
-            axs[1].bar_label(container)
-
-        for patch in barplot.patches:
-            patch.set_edgecolor(patch.get_facecolor())
-
         # Plot iterations
         max_iterations = matrix_df['Iterations'].max()
         barplot = sns.barplot(x='Tolerance', y='Iterations', hue='Solver', data=matrix_df, ax=axs[2])
@@ -166,25 +154,18 @@ def plot_results(df):
         axs[2].set_xlabel('Tolerance')
         axs[2].set_ylim(0, max_iterations * 1.1)  # Set ylim slightly above max iterations for better visualization
 
-        for container in axs[2].containers:
-            axs[2].bar_label(container)
-
-        for patch in barplot.patches:
-            patch.set_edgecolor(patch.get_facecolor())
-
-        plt.tight_layout(rect=[0, 0, 1, 0.96])
-        
+        # Plot residuals over iterations
         for index, row in matrix_df.iterrows():
-            residuals = row['List of residuals']
+            residuals = row['Residuals']
             iterations = np.arange(len(residuals))
 
-            axs[3].plot(iterations, residuals, label=row['Solver']  )
+            axs[3].plot(iterations, residuals, label=row['Solver'])  # Use axs[3] for residual plot
 
-            axs[3].set_title('Residual Progression by Solver')
-            axs[3].set_ylabel('Residual')
-            axs[3].set_xlabel('Iteration')
-            axs[3].set_yscale('log')
-            axs[3].legend()
+        axs[3].set_title('Residual Progression by Solver')
+        axs[3].set_ylabel('Residual')
+        axs[3].set_xlabel('Iteration')
+        axs[3].set_yscale('log')
+        axs[3].legend()
 
         plt.tight_layout(rect=[0, 0, 1, 0.96])
 
@@ -194,6 +175,7 @@ def plot_results(df):
         canvas_plot.get_tk_widget().pack(side=tk.TOP, fill=tk.BOTH, expand=True)
 
     root.mainloop()
+
 
 if __name__ == "__main__":
     results = run_matrix_solvers()
