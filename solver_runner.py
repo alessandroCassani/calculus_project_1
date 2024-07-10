@@ -5,18 +5,12 @@ import time
 import matplotlib.pyplot as plt
 import seaborn as sns
 import pandas as pd
-from memory_profiler import memory_usage
 from JacobiExecuter import JacobiExecuter
-from GaussSeidelExecuter import GaussSeidelExecuter
-from GradientExecuter import GradientExecuter
 from ConjugateGradientExecuter import ConjugateGradientExecuter
-import tkinter as tk
-from tkinter import ttk
-from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
-import matplotlib.pyplot as plt
-import seaborn as sns
+import matplotlib as mpl
 
 PATH = 'matrici'
+RESULTS_DIR = 'results'
 
 def run_matrix_solvers():
     matrix_files = Utility.get_matrix_paths(PATH)
@@ -28,10 +22,11 @@ def run_matrix_solvers():
         A = Utility.read(matrix)
         
         if Utility.matrix_checks(A) is False:
-            print('incorrect matrix')
+            print(f'Incorrect matrix: {matrix}')
             continue
         
         if A is None:
+            print(f'Failed to read matrix: {matrix}')
             continue 
         
         matrix_results = {}
@@ -63,7 +58,7 @@ def run_matrix_solvers():
         results[matrix] = matrix_results
 
     # Write the results to CSV
-    Utility.write_usage_csv('results/usage_data.csv', results)
+    Utility.write_usage_csv(os.path.join(RESULTS_DIR, 'usage_data.csv'), results)
     
     return results
 
@@ -76,105 +71,60 @@ def parse_data(results):
                     'Matrix': matrix,
                     'Solver': solver,
                     'Tolerance': tol,
-                    'Iterations': metrics['Iterations'],
                     'Residual': metrics['Residual'],
                     'Time Usage (seconds)': metrics['Time Usage (seconds)'],
                     'List of residuals': metrics['List of residuals']
                 })
     return pd.DataFrame(parsed_data)
 
-def plot_results(df):
-    # Create the root window
-    root = tk.Tk()
-    root.title('Matrix Solver Results')
-    root.geometry('1200x800')
-
-    # Create a frame for the canvas and scrollbar
-    frame = tk.Frame(root)
-    frame.pack(fill=tk.BOTH, expand=True)
-
-    # Create a canvas in the frame
-    canvas = tk.Canvas(frame)
-    canvas.pack(side=tk.LEFT, fill=tk.BOTH, expand=True)
-
-    # Add a scrollbar to the canvas
-    scrollbar = ttk.Scrollbar(frame, orient=tk.VERTICAL, command=canvas.yview)
-    scrollbar.pack(side=tk.RIGHT, fill=tk.Y)
-    canvas.configure(yscrollcommand=scrollbar.set)
-
-    # Create another frame inside the canvas
-    scrollable_frame = tk.Frame(canvas)
-    canvas.create_window((0, 0), window=scrollable_frame, anchor='nw')
-
-    def on_configure(event):
-        canvas.configure(scrollregion=canvas.bbox('all'))
-        if scrollable_frame.winfo_width() != canvas.winfo_width():
-            canvas.itemconfigure('window', width=canvas.winfo_width())
-
-    scrollable_frame.bind('<Configure>', on_configure)
+def plot_results(df, specific_tolerance=1e-6):
+    # Ensure the results directory exists
+    if not os.path.exists(RESULTS_DIR):
+        os.makedirs(RESULTS_DIR)
 
     sns.set(style="whitegrid")
 
     # Get unique matrices
     matrices = df['Matrix'].unique()
 
-    for idx, matrix in enumerate(matrices):
+    # Adjusting rcParams to handle large data points
+    mpl.rcParams['agg.path.chunksize'] = 10000
+
+    for matrix in matrices:
         matrix_df = df[df['Matrix'] == matrix]
+        
+        # Filter for a specific tolerance
+        tolerance_df = matrix_df[matrix_df['Tolerance'] == specific_tolerance]
 
-        fig, axs = plt.subplots(4, 1, figsize=(12, 24))  # Ensure you have enough subplots
-        fig.suptitle(f'Results for Matrix: {matrix}', fontsize=16)
+        if tolerance_df.empty:
+            continue
 
-        # Sort the tolerances in descending order
-        matrix_df = matrix_df.sort_values(by='Tolerance', ascending=False)
+        fig, ax = plt.subplots(figsize=(12, 8))
+        fig.suptitle(f'Residual Progression for Matrix: {matrix} - Tolerance: {specific_tolerance}', fontsize=16)
 
-        # Plot time usage
-        max_time = matrix_df['Time Usage (seconds)'].max()
-        barplot = sns.barplot(x='Tolerance', y='Time Usage (seconds)', hue='Solver', data=matrix_df, ax=axs[0])
-        axs[0].set_title('Time Usage by Solver and Tolerance')
-        axs[0].set_ylabel('Time Usage (seconds)')
-        axs[0].set_xlabel('Tolerance')
-        axs[0].set_ylim(0, max_time * 1.1)  # Set ylim slightly above max time for better visualization
+        # Iterate over each solver
+        for solver_name in tolerance_df['Solver'].unique():
+            solver_residuals = []
 
-        # Plot residual
-        max_residual = matrix_df['Residual'].max()
-        min_residual = matrix_df['Residual'].min()
-        barplot = sns.barplot(x='Tolerance', y='Residual', hue='Solver', data=matrix_df, ax=axs[1])
-        axs[1].set_title('Residual by Solver and Tolerance')
-        axs[1].set_ylabel('Residual')
-        axs[1].set_xlabel('Tolerance')
-        axs[1].set_yscale('log')
-        axs[1].set_ylim(min_residual * 0.1, max_residual * 1.1)
-        axs[1].yaxis.set_major_formatter(plt.FuncFormatter(lambda x, _: f'{x:.1e}'))
+            # Accumulate residuals for the specific solver and tolerance
+            for _, row in tolerance_df[tolerance_df['Solver'] == solver_name].iterrows():
+                residuals = np.array(row['List of residuals'])  # Convert to numpy array
+                residuals = residuals.flatten()  # Ensure it's flattened to 1D array
+                solver_residuals.extend(residuals)
 
-        # Plot iterations
-        max_iterations = matrix_df['Iterations'].max()
-        barplot = sns.barplot(x='Tolerance', y='Iterations', hue='Solver', data=matrix_df, ax=axs[2])
-        axs[2].set_title('Iterations by Solver and Tolerance')
-        axs[2].set_ylabel('Iterations')
-        axs[2].set_xlabel('Tolerance')
-        axs[2].set_ylim(0, max_iterations * 1.1)  # Set ylim slightly above max iterations for better visualization
+            # Plot residuals for the solver
+            iterations = np.arange(1, len(solver_residuals) + 1)
+            ax.plot(iterations, solver_residuals, label=f'{solver_name}')
 
-        # Plot residuals over iterations
-        for index, row in matrix_df.iterrows():
-            residuals = row['List of residuals']
-            iterations = np.arange(len(residuals))
+        ax.set_ylabel('Residual')
+        ax.set_xlabel('Iteration')
+        ax.set_yscale('log')
+        ax.legend(loc='upper right')  # Specify legend location
 
-            axs[3].plot(iterations, residuals, label=row['Solver'])  # Use axs[3] for residual plot
+        plot_path = os.path.join(RESULTS_DIR, f'{os.path.basename(matrix)}_residuals_tolerance_{specific_tolerance}.png')
+        plt.savefig(plot_path)
+        plt.close(fig)
 
-        axs[3].set_title('Residual Progression by Solver')
-        axs[3].set_ylabel('Residual')
-        axs[3].set_xlabel('Iteration')
-        axs[3].set_yscale('log')
-        axs[3].legend()
-
-        plt.tight_layout(rect=[0, 0, 1, 0.96])
-
-        # Embed the plot into the Tkinter frame
-        canvas_plot = FigureCanvasTkAgg(fig, master=scrollable_frame)
-        canvas_plot.draw()
-        canvas_plot.get_tk_widget().pack(side=tk.TOP, fill=tk.BOTH, expand=True)
-
-    root.mainloop()
 
 
 if __name__ == "__main__":
