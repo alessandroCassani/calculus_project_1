@@ -122,6 +122,9 @@ def plot_results(df):
         fig, axs = plt.subplots(3, 1, figsize=(12, 24))
         fig.suptitle(f'Results for Matrix: {matrix}', fontsize=16)
 
+        # Sort the tolerances in descending order
+        matrix_df = matrix_df.sort_values(by='Tolerance', ascending=False)
+
         # Plot time usage
         max_time = matrix_df['Time Usage (seconds)'].max()
         barplot = sns.barplot(x='Tolerance', y='Time Usage (seconds)', hue='Solver', data=matrix_df, ax=axs[0])
@@ -131,18 +134,21 @@ def plot_results(df):
         axs[0].set_ylim(0, max_time * 1.1)  # Set ylim slightly above max time for better visualization
 
         for container in axs[0].containers:
-            axs[0].bar_label(container)
+            axs[0].bar_label(container, fmt='%.2f')
 
         for patch in barplot.patches:
             patch.set_edgecolor(patch.get_facecolor())
 
         # Plot residual
         max_residual = matrix_df['Residual'].max()
+        min_residual = matrix_df['Residual'].min()
         barplot = sns.barplot(x='Tolerance', y='Residual', hue='Solver', data=matrix_df, ax=axs[1])
         axs[1].set_title('Residual by Solver and Tolerance')
         axs[1].set_ylabel('Residual')
         axs[1].set_xlabel('Tolerance')
-        axs[1].set_ylim(0, max_residual * 1.1)  # Set ylim slightly above max residual for better visualization
+        axs[1].set_yscale('log')
+        axs[1].set_ylim(min_residual * 0.1, max_residual * 1.1)
+        axs[1].yaxis.set_major_formatter(plt.FuncFormatter(lambda x, _: f'{x:.1e}'))
 
         for container in axs[1].containers:
             axs[1].bar_label(container)
@@ -172,6 +178,7 @@ def plot_results(df):
         canvas_plot.get_tk_widget().pack(side=tk.TOP, fill=tk.BOTH, expand=True)
 
     root.mainloop()
+
 
 if __name__ == "__main__":
     results = run_matrix_solvers()
