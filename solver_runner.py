@@ -156,7 +156,7 @@ def plot_results(df):
 
         # Plot residuals over iterations
         for index, row in matrix_df.iterrows():
-            residuals = row['Residuals']
+            residuals = row['List of residuals']
             iterations = np.arange(len(residuals))
 
             axs[3].plot(iterations, residuals, label=row['Solver'])  # Use axs[3] for residual plot
