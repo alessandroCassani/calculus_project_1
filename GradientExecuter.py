@@ -10,7 +10,9 @@ class GradientExecuter(Executer):
     
     def update_function(self):
         r = self.b - self.matrix.dot(self.x)  # Compute residual r(k) = b - A * x(k)
-        alpha = np.dot(r, r) / np.dot(r, self.matrix.dot(r)) # Compute alpha = (r^T * r) / (r^T * y)
-        xk = self.x + (alpha * r)  # Update x(k) = x(k) + alpha * r
-    
-        return xk, r
+        Ar = self.matrix.dot(r)  # Compute A * r
+        r_dot_r = np.dot(r, r)  # Compute r^T * r
+        alpha = r_dot_r / np.dot(r, Ar)  # Compute alpha = (r^T * r) / (r^T * A * r)
+        self.x += alpha * r  # Update x(k) in-place: x(k+1) = x(k) + alpha * r
+        
+        return self.x, r

@@ -35,4 +35,3 @@ class ConjugateGradientExecuter(Executer):
         self.p_old = p
         
         return self.x, self.residual
-
