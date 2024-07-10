@@ -18,19 +18,20 @@ class Executer(ABC):
         self.diagonal_inv = 1.0 / self.matrix.diagonal()
 
     def method_execution(self):
-        residual_norm = np.inf  # Initialize residual_norm
+        residual_norm = np.inf  
+        list_of_residual = []
 
         for self.counter in range(self.iterations):
             self.x, residual_vector = self.update_function()
+            list_of_residual.append[residual_vector]
             residual_norm = np.linalg.norm(residual_vector)
-
             if residual_norm < self.tol:
                 print(f'{self.__class__.__name__}: Converged with residual norm {residual_norm}')
                 break
         else:
             print(f'{self.__class__.__name__}: Did not converge within {self.iterations} iterations')
 
-        return self.counter, residual_norm
+        return self.counter, residual_norm, list_of_residual
 
     @abstractmethod
     def update_function(self):

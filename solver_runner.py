@@ -47,7 +47,7 @@ def run_matrix_solvers():
                 print(f'\nSolving {matrix} with tolerance {tol} using {solver_name}')
                 
                 start_time = time.perf_counter()
-                counter, residual_norm = solver.method_execution()
+                counter, residual_norm, list_of_residuals = solver.method_execution()
                 end_time = time.perf_counter()
                 time_usage = end_time - start_time
                 print(f'{solver_name} solver finished in {time_usage:.6f} seconds with residual {residual_norm} and iterations {counter}')
@@ -55,7 +55,8 @@ def run_matrix_solvers():
                 tol_results[solver_name] = {
                     'Iterations': counter,
                     'Residual': residual_norm,
-                    'Time Usage (seconds)': time_usage
+                    'Time Usage (seconds)': time_usage,
+                    'List of residuals': list_of_residuals
                 }
 
             matrix_results[tol] = tol_results
@@ -77,7 +78,8 @@ def parse_data(results):
                     'Tolerance': tol,
                     'Iterations': metrics['Iterations'],
                     'Residual': metrics['Residual'],
-                    'Time Usage (seconds)': metrics['Time Usage (seconds)']
+                    'Time Usage (seconds)': metrics['Time Usage (seconds)'],
+                    'List of residuals': metrics['List of residuals']
                 })
     return pd.DataFrame(parsed_data)
 
@@ -169,6 +171,20 @@ def plot_results(df):
 
         for patch in barplot.patches:
             patch.set_edgecolor(patch.get_facecolor())
+
+        plt.tight_layout(rect=[0, 0, 1, 0.96])
+        
+        for index, row in matrix_df.iterrows():
+            residuals = row['List of residuals']
+            iterations = np.arange(len(residuals))
+
+            axs[3].plot(iterations, residuals, label=row['Solver']  )
+
+            axs[3].set_title('Residual Progression by Solver')
+            axs[3].set_ylabel('Residual')
+            axs[3].set_xlabel('Iteration')
+            axs[3].set_yscale('log')
+            axs[3].legend()
 
         plt.tight_layout(rect=[0, 0, 1, 0.96])
 
