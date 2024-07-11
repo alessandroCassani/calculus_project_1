@@ -3,7 +3,7 @@ from Executer import Executer
 import numpy as np
 
 class JacobiExecuter(Executer):
-    def __init__(self, matrix: csc_matrix, tol: float, iterations: int = 20000):
+    def __init__(self, matrix: csc_matrix, tol: float, iterations: int):
         super().__init__(matrix, tol, iterations)
         self.diagonal_inv = 1.0 / matrix.diagonal()  # Inverse of the diagonal elements
     

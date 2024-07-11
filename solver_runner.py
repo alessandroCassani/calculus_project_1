@@ -161,9 +161,12 @@ def plot_results(df, specific_tolerance=1e-6):
                     residuals = residuals.flatten()  # Ensure it's flattened to 1D array
                     solver_residuals.extend(residuals)
 
+                # Smooth the residuals
+                solver_residuals = pd.Series(solver_residuals).rolling(window=100, min_periods=1).mean().values
+
                 # Plot residuals for the solver
                 iterations = np.arange(1, len(solver_residuals) + 1)
-                axs[3].plot(iterations, solver_residuals, label=f'{solver_name}')
+                axs[3].plot(iterations, solver_residuals, label=f'{solver_name}', alpha=0.7)
 
             axs[3].set_ylabel('Residual')
             axs[3].set_xlabel('Iteration')
@@ -176,6 +179,7 @@ def plot_results(df, specific_tolerance=1e-6):
         plot_path = os.path.join(RESULTS_DIR, f'{os.path.basename(matrix)}_results.png')
         plt.savefig(plot_path)
         plt.close(fig)
+
 if __name__ == "__main__":
     results = run_matrix_solvers()
     data = parse_data(results)

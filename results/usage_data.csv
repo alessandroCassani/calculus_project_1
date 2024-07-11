@@ -3,79 +3,79 @@ Matrix,Solver,Tolerance,Iterations,Residual,Time Usage (seconds)
                      MATRIX: spa1.mtx
 
 TOLERANCE : 0.0001
-Jacobi,Iterations:,181,Residual:,9.649907454818539e-05,Time Usage (seconds): 0.06540519999907701
-Conjugate Gradient,Iterations:,165,Residual:,8.374911600201817e-05,Time Usage (seconds): 0.047752099999343045
+Jacobi,Iterations:,131,Residual:,9.880107213842836e-05,Time Usage (seconds): 0.02498109999942244
+Conjugate Gradient,Iterations:,128,Residual:,8.678786316111082e-05,Time Usage (seconds): 0.04609659999914584
 
 TOLERANCE : 1e-06
-Jacobi,Iterations:,247,Residual:,9.795087350463614e-07,Time Usage (seconds): 0.03285880000112229
-Conjugate Gradient,Iterations:,186,Residual:,9.605362861832144e-07,Time Usage (seconds): 0.050704199999017874
+Jacobi,Iterations:,198,Residual:,9.354962601368445e-07,Time Usage (seconds): 0.033361499998136424
+Conjugate Gradient,Iterations:,169,Residual:,8.740247886667884e-07,Time Usage (seconds): 0.046000099999218946
 
 TOLERANCE : 1e-08
-Jacobi,Iterations:,313,Residual:,9.942421558252864e-09,Time Usage (seconds): 0.04733649999980116
-Conjugate Gradient,Iterations:,208,Residual:,9.991613790165245e-09,Time Usage (seconds): 0.06008830000064336
+Jacobi,Iterations:,264,Residual:,9.495705116397165e-09,Time Usage (seconds): 0.03351159999874653
+Conjugate Gradient,Iterations:,192,Residual:,8.596632628598246e-09,Time Usage (seconds): 0.04997000000003027
 
 TOLERANCE : 1e-10
-Jacobi,Iterations:,380,Residual:,9.412852994533572e-11,Time Usage (seconds): 0.05230469999878551
-Conjugate Gradient,Iterations:,231,Residual:,9.149435837536692e-11,Time Usage (seconds): 0.06611990000237711
+Jacobi,Iterations:,330,Residual:,9.638444748392202e-11,Time Usage (seconds): 0.05462199999965378
+Conjugate Gradient,Iterations:,215,Residual:,8.686585323797628e-11,Time Usage (seconds): 0.07253569999738829
 --------------------------------------------------------------------------------
 
 
                      MATRIX: spa2.mtx
 
 TOLERANCE : 0.0001
-Jacobi,Iterations:,59,Residual:,9.30851381929731e-05,Time Usage (seconds): 0.0974848000005295
-Conjugate Gradient,Iterations:,190,Residual:,9.883565415587824e-05,Time Usage (seconds): 0.509850300000835
+Jacobi,Iterations:,41,Residual:,9.250978292095297e-05,Time Usage (seconds): 0.07201759999952628
+Conjugate Gradient,Iterations:,140,Residual:,9.682378201483454e-05,Time Usage (seconds): 0.39266219999990426
 
 TOLERANCE : 1e-06
-Jacobi,Iterations:,80,Residual:,8.784177115699665e-07,Time Usage (seconds): 0.13809460000265972
-Conjugate Gradient,Iterations:,233,Residual:,9.91361406608428e-07,Time Usage (seconds): 0.6963781000013114
+Jacobi,Iterations:,62,Residual:,8.729882472739939e-07,Time Usage (seconds): 0.09935599999880651
+Conjugate Gradient,Iterations:,197,Residual:,8.908305193555233e-07,Time Usage (seconds): 0.5822150999993028
 
 TOLERANCE : 1e-08
-Jacobi,Iterations:,101,Residual:,8.289365550670778e-09,Time Usage (seconds): 0.22171569999773055
-Conjugate Gradient,Iterations:,286,Residual:,9.021112768849923e-09,Time Usage (seconds): 0.7521864999980608
+Jacobi,Iterations:,83,Residual:,8.23813913628163e-09,Time Usage (seconds): 0.13823109999793814
+Conjugate Gradient,Iterations:,244,Residual:,9.928497104406448e-09,Time Usage (seconds): 0.6252389000001131
 
 TOLERANCE : 1e-10
-Jacobi,Iterations:,121,Residual:,9.765679819283832e-11,Time Usage (seconds): 0.21088310000050114
-Conjugate Gradient,Iterations:,329,Residual:,9.290627475249494e-11,Time Usage (seconds): 0.9153925999999046
+Jacobi,Iterations:,103,Residual:,9.707030415551404e-11,Time Usage (seconds): 0.16717359999893233
+Conjugate Gradient,Iterations:,290,Residual:,9.696895840016831e-11,Time Usage (seconds): 0.7658472000002803
 --------------------------------------------------------------------------------
 
 
                      MATRIX: vem1.mtx
 
 TOLERANCE : 0.0001
-Jacobi,Iterations:,3084,Residual:,9.959448785619115e-05,Time Usage (seconds): 0.11322799999834388
-Conjugate Gradient,Iterations:,43,Residual:,6.417058301408412e-05,Time Usage (seconds): 0.002531699999963166
+Jacobi,Iterations:,2181,Residual:,9.986720544414375e-05,Time Usage (seconds): 0.07580619999862392
+Conjugate Gradient,Iterations:,37,Residual:,7.303130828031577e-05,Time Usage (seconds): 0.003018200000951765
 
 TOLERANCE : 1e-06
-Jacobi,Iterations:,4202,Residual:,9.99965225642342e-07,Time Usage (seconds): 0.10810670000137179
-Conjugate Gradient,Iterations:,51,Residual:,6.513616733546936e-07,Time Usage (seconds): 0.0024421999987680465
+Jacobi,Iterations:,3300,Residual:,9.985853383379166e-07,Time Usage (seconds): 0.10564599999997881
+Conjugate Gradient,Iterations:,44,Residual:,7.740197538344777e-07,Time Usage (seconds): 0.0021962999999232125
 
 TOLERANCE : 1e-08
-Jacobi,Iterations:,5321,Residual:,9.998746030405861e-09,Time Usage (seconds): 0.128531499998644
-Conjugate Gradient,Iterations:,57,Residual:,6.147368663576901e-09,Time Usage (seconds): 0.0029256000016175676
+Jacobi,Iterations:,4419,Residual:,9.984985287173737e-09,Time Usage (seconds): 0.11387359999935143
+Conjugate Gradient,Iterations:,52,Residual:,6.357575179068484e-09,Time Usage (seconds): 0.0033601000031922013
 
 TOLERANCE : 1e-10
-Jacobi,Iterations:,6440,Residual:,9.993152388751711e-11,Time Usage (seconds): 0.1842331000007107
-Conjugate Gradient,Iterations:,62,Residual:,4.4383589825160835e-11,Time Usage (seconds): 0.002286800001456868
+Jacobi,Iterations:,5538,Residual:,9.983999979770419e-11,Time Usage (seconds): 0.15598580000005313
+Conjugate Gradient,Iterations:,58,Residual:,5.2118374829472835e-11,Time Usage (seconds): 0.003664699997898424
 --------------------------------------------------------------------------------
 
 
                      MATRIX: vem2.mtx
 
 TOLERANCE : 0.0001
-Jacobi,Iterations:,4904,Residual:,9.98501606494579e-05,Time Usage (seconds): 0.16325240000151098
-Conjugate Gradient,Iterations:,54,Residual:,7.337183922168505e-05,Time Usage (seconds): 0.0026890000008279458
+Jacobi,Iterations:,3411,Residual:,9.980363864774995e-05,Time Usage (seconds): 0.1126908000005642
+Conjugate Gradient,Iterations:,47,Residual:,6.262493298252974e-05,Time Usage (seconds): 0.006836799999291543
 
 TOLERANCE : 1e-06
-Jacobi,Iterations:,6653,Residual:,9.982147272596698e-07,Time Usage (seconds): 0.21321390000230167
-Conjugate Gradient,Iterations:,64,Residual:,7.779774213144414e-07,Time Usage (seconds): 0.003576000002794899
+Jacobi,Iterations:,5160,Residual:,9.97749741681226e-07,Time Usage (seconds): 0.19533709999814164
+Conjugate Gradient,Iterations:,55,Residual:,8.248571404386519e-07,Time Usage (seconds): 0.0032756000000517815
 
 TOLERANCE : 1e-08
-Jacobi,Iterations:,8402,Residual:,9.979146048020758e-09,Time Usage (seconds): 0.26995439999882365
-Conjugate Gradient,Iterations:,72,Residual:,4.956059826876543e-09,Time Usage (seconds): 0.003506499997456558
+Jacobi,Iterations:,6909,Residual:,9.974629479055436e-09,Time Usage (seconds): 0.3015793999984453
+Conjugate Gradient,Iterations:,65,Residual:,7.681982086222982e-09,Time Usage (seconds): 0.004832399998122128
 
 TOLERANCE : 1e-10
-Jacobi,Iterations:,10150,Residual:,9.991801313552024e-11,Time Usage (seconds): 0.32766930000070715
-Conjugate Gradient,Iterations:,78,Residual:,4.999073397001137e-11,Time Usage (seconds): 0.0039386000025842804
+Jacobi,Iterations:,8657,Residual:,9.997804376090498e-11,Time Usage (seconds): 0.2626564000020153
+Conjugate Gradient,Iterations:,72,Residual:,9.717764366424595e-11,Time Usage (seconds): 0.005439399999886518
 --------------------------------------------------------------------------------
 
