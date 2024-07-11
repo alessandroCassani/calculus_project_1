@@ -22,7 +22,7 @@ class Executer(ABC):
 
         for self.counter in range(self.iterations):
             self.x, residual_vector = self.update_function()
-            list_of_residual.append(self.get_error())
+            list_of_residual.append(residual_vector)
             residual_norm = np.linalg.norm(residual_vector)/np.linalg.norm(self.b)
             if residual_norm < self.tol:
                 print(f'{self.__class__.__name__}: Converged with residual norm {residual_norm}')
