@@ -17,7 +17,7 @@ RESULTS_DIR = 'results'
 def run_matrix_solvers():
     matrix_files = Utility.get_matrix_paths(PATH)
     tolerances = [1e-4, 1e-6, 1e-8, 1e-10]
-    max_iterations = 20000
+    max_iterations = 30000
     results = {}
 
     for matrix in matrix_files:
