@@ -4,7 +4,7 @@ from scipy.sparse.linalg import spsolve
 from Executer import Executer  # Assuming Executer is defined in Executer.py
 
 class GradientExecuter(Executer):
-    def __init__(self, matrix: csc_matrix, tol: float, max_iter: int = 20000):
+    def __init__(self, matrix: csc_matrix, tol: float, max_iter: int):
         super().__init__(matrix, tol, max_iter)
     
     

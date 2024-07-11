@@ -1,7 +1,5 @@
 import numpy as np
 from scipy.sparse import csc_matrix, tril
-from scipy.sparse.linalg import spsolve
-import time
 from Executer import Executer
 
 class GaussSeidelExecuter(Executer):
