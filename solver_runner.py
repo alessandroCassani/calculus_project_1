@@ -7,6 +7,8 @@ import seaborn as sns
 import pandas as pd
 from JacobiExecuter import JacobiExecuter
 from ConjugateGradientExecuter import ConjugateGradientExecuter
+from GaussSeidelExecuter import GaussSeidelExecuter
+from GradientExecuter import GradientExecuter
 import matplotlib as mpl
 
 PATH = 'matrici'
@@ -35,7 +37,9 @@ def run_matrix_solvers():
 
             solvers = [
                 ('Jacobi', JacobiExecuter(A, tol, max_iterations)),
-                ('Conjugate Gradient', ConjugateGradientExecuter(A, tol, max_iterations))
+                ('Conjugate Gradient', ConjugateGradientExecuter(A, tol, max_iterations)),
+                ('Gaus Seidel', GaussSeidelExecuter(A, tol, max_iterations)),
+                ('Gradient', GradientExecuter(A, tol, max_iterations))
             ]
             
             for solver_name, solver in solvers:
