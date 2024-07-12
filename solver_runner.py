@@ -1,15 +1,14 @@
-from Utility import Utility
 import os
 import numpy as np
 import time
 import matplotlib.pyplot as plt
 import seaborn as sns
 import pandas as pd
+from Utility import Utility
 from JacobiExecuter import JacobiExecuter
 from ConjugateGradientExecuter import ConjugateGradientExecuter
 from GaussSeidelExecuter import GaussSeidelExecuter
 from GradientExecuter import GradientExecuter
-import matplotlib as mpl
 
 PATH = 'matrici'
 RESULTS_DIR = 'results'
@@ -81,8 +80,6 @@ def parse_data(results):
                     'List of residuals': metrics['List of residuals']
                 })
     return pd.DataFrame(parsed_data)
-
-import matplotlib as mpl
 
 def plot_results(df, specific_tolerance=1e-6):
     # Ensure the results directory exists
@@ -184,7 +181,45 @@ def plot_results(df, specific_tolerance=1e-6):
         plt.savefig(plot_path)
         plt.close(fig)
 
+def plot_enhanced_bar_chart(df, specific_tolerance=1e-6):
+    df_filtered = df[df['Tolerance'] == specific_tolerance]
+
+    # Extract unique solvers and tolerances
+    solvers = df_filtered['Solver'].unique()
+    tolerances = df_filtered['Tolerance'].unique()
+
+    # Prepare data for plotting
+    residuals = np.array([df_filtered[df_filtered['Solver'] == solver]['Residual'].values for solver in solvers])
+
+    # Plotting
+    sns.set(style="whitegrid")
+    fig, ax = plt.subplots(figsize=(10, 6))
+
+    bar_width = 0.2
+    index = np.arange(len(tolerances))
+
+    for i, solver in enumerate(solvers):
+        plt.bar(index + i * bar_width, residuals[i], bar_width, label=solver)
+
+    plt.xlabel('Tolerance', fontsize=14)
+    plt.ylabel('Residual', fontsize=14)
+    plt.title('Residual by Solver and Tolerance', fontsize=16)
+    plt.xticks(index + bar_width * 1.5, tolerances, fontsize=12)
+    plt.yscale('log')
+    plt.legend(title='Solver', fontsize=12)
+    plt.grid(True, which="both", linestyle='--', linewidth=0.5)
+
+    # Adding annotations
+    for i in range(len(tolerances)):
+        for j in range(len(solvers)):
+            plt.text(index[i] + j * bar_width, residuals[j, i], f'{residuals[j, i]:.1e}', 
+                     ha='center', va='bottom', fontsize=10, rotation=90)
+
+    plt.tight_layout()
+    plt.show()
+
 if __name__ == "__main__":
     results = run_matrix_solvers()
     data = parse_data(results)
     plot_results(data)
+    plot_enhanced_bar_chart(data)
