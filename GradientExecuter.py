@@ -15,4 +15,5 @@ class GradientExecuter(Executer):
         alpha = r_dot_r / np.dot(r, Ar)  # Compute alpha = (r^T * r) / (r^T * A * r)
         self.x += alpha * r  # Update x(k) in-place: x(k+1) = x(k) + alpha * r
         
+        
         return self.x, r

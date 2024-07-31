@@ -36,8 +36,8 @@ def run_matrix_solvers():
 
             solvers = [
                 ('Jacobi', JacobiExecuter(A, tol, max_iterations)),
-                ('Conjugate Gradient', ConjugateGradientExecuter(A, tol, max_iterations)),
-                ('Gaus Seidel', GaussSeidelExecuter(A, tol, max_iterations)),
+                #('Conjugate Gradient', ConjugateGradientExecuter(A, tol, max_iterations)),
+                #('Gauss Seidel', GaussSeidelExecuter(A, tol, max_iterations)),
                 ('Gradient', GradientExecuter(A, tol, max_iterations))
             ]
             
@@ -154,20 +154,10 @@ def plot_results(df, specific_tolerance=1e-6):
         if not tolerance_df.empty:
             # Iterate over each solver
             for solver_name in tolerance_df['Solver'].unique():
-                solver_residuals = []
-
-                # Accumulate residuals for the specific solver and tolerance
                 for _, row in tolerance_df[tolerance_df['Solver'] == solver_name].iterrows():
                     residuals = np.array(row['List of residuals'])  # Convert to numpy array
-                    residuals = residuals.flatten()  # Ensure it's flattened to 1D array
-                    solver_residuals.extend(residuals)
-
-                # Smooth the residuals
-                solver_residuals = pd.Series(solver_residuals).rolling(window=100, min_periods=1).mean().values
-
-                # Plot residuals for the solver
-                iterations = np.arange(1, len(solver_residuals) + 1)
-                axs[3].plot(iterations, solver_residuals, label=f'{solver_name}', alpha=0.7)
+                    iterations = np.arange(1, len(residuals) + 1)
+                    axs[3].plot(iterations, residuals, label=f'{solver_name}', alpha=0.7)
 
             axs[3].set_ylabel('Residual')
             axs[3].set_xlabel('Iteration')
@@ -180,6 +170,7 @@ def plot_results(df, specific_tolerance=1e-6):
         plot_path = os.path.join(RESULTS_DIR, f'{os.path.basename(matrix)}_results.png')
         plt.savefig(plot_path)
         plt.close(fig)
+
 
 def plot_enhanced_bar_chart(df, specific_tolerance=1e-6):
     df_filtered = df[df['Tolerance'] == specific_tolerance]
