@@ -81,17 +81,12 @@ def parse_data(results):
                 })
     return pd.DataFrame(parsed_data)
 
-def plot_results(df, specific_tolerance=1e-6):
-    # Ensure the results directory exists
+def plot_results(df, specific_tolerance=1e-10):
     if not os.path.exists(RESULTS_DIR):
         os.makedirs(RESULTS_DIR)
 
     sns.set(style="whitegrid")
-
-    # Get unique matrices
     matrices = df['Matrix'].unique()
-
-    # Adjusting rcParams to handle large data points
     plt.rcParams['agg.path.chunksize'] = 10000
 
     for idx, matrix in enumerate(matrices):
@@ -99,17 +94,15 @@ def plot_results(df, specific_tolerance=1e-6):
 
         fig, axs = plt.subplots(4, 1, figsize=(12, 32))
         fig.suptitle(f'Results for Matrix: {matrix}', fontsize=16)
-
-        # Sort the tolerances in descending order
         matrix_df = matrix_df.sort_values(by='Tolerance', ascending=False)
 
-        # Plot time usage
         max_time = matrix_df['Time Usage (seconds)'].max()
         barplot = sns.barplot(x='Tolerance', y='Time Usage (seconds)', hue='Solver', data=matrix_df, ax=axs[0])
         axs[0].set_title('Time Usage by Solver and Tolerance')
         axs[0].set_ylabel('Time Usage (seconds)')
         axs[0].set_xlabel('Tolerance')
-        axs[0].set_ylim(0, max_time * 1.1)  # Set ylim slightly above max time for better visualization
+        axs[0].set_ylim(0, max_time * 1.1)
+        axs[0].set_yscale('log')  # Aggiungi scala logaritmica qui
 
         for container in axs[0].containers:
             axs[0].bar_label(container)
@@ -207,7 +200,7 @@ def plot_enhanced_bar_chart(df, specific_tolerance=1e-6):
                      ha='center', va='bottom', fontsize=10, rotation=90)
 
     plt.tight_layout()
-    plt.show()
+    
 
 if __name__ == "__main__":
     results = run_matrix_solvers()
