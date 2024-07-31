@@ -1,7 +1,5 @@
 import numpy as np
 from scipy.sparse import csc_matrix, tril
-from scipy.sparse.linalg import spsolve
-import time
 from Executer import Executer
 
 class GaussSeidelExecuter(Executer):
@@ -22,6 +20,7 @@ class GaussSeidelExecuter(Executer):
     def update_function(self):
         r = self.b - self.matrix.dot(self.x)  # Compute residual r(k) = b - A * x(k)
         y = self.forward_substitution(self.triang_inf, r)  # Solve P * y = r(k) using forward substitution
+        
         # self.x +y scope: update x(k) = x(k) + y
         return self.x + y, r
     

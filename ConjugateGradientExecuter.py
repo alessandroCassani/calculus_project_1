@@ -3,7 +3,7 @@ from scipy.sparse import csc_matrix
 from Executer import Executer 
 
 class ConjugateGradientExecuter(Executer):
-    def __init__(self, matrix: csc_matrix, tol: float, max_iter: int = 20000):
+    def __init__(self, matrix: csc_matrix, tol: float, max_iter: int):
         super().__init__(matrix, tol, max_iter)
         self.r_old = None  
         self.p_old = None  
@@ -33,5 +33,7 @@ class ConjugateGradientExecuter(Executer):
         # Store values for next iteration
         self.r_old = self.residual
         self.p_old = p
+        
+    
         
         return self.x, self.residual
