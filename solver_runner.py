@@ -36,8 +36,8 @@ def run_matrix_solvers():
 
             solvers = [
                 ('Jacobi', JacobiExecuter(A, tol, max_iterations)),
-                #('Conjugate Gradient', ConjugateGradientExecuter(A, tol, max_iterations)),
-                #('Gauss Seidel', GaussSeidelExecuter(A, tol, max_iterations)),
+                ('Conjugate Gradient', ConjugateGradientExecuter(A, tol, max_iterations)),
+                ('Gauss Seidel', GaussSeidelExecuter(A, tol, max_iterations)),
                 ('Gradient', GradientExecuter(A, tol, max_iterations))
             ]
             
@@ -81,7 +81,7 @@ def parse_data(results):
                 })
     return pd.DataFrame(parsed_data)
 
-def plot_results(df, specific_tolerance=1e-10):
+def plot_results(df):
     if not os.path.exists(RESULTS_DIR):
         os.makedirs(RESULTS_DIR)
 
@@ -96,13 +96,19 @@ def plot_results(df, specific_tolerance=1e-10):
         fig.suptitle(f'Results for Matrix: {matrix}', fontsize=16)
         matrix_df = matrix_df.sort_values(by='Tolerance', ascending=False)
 
+        # Plot time usage
         max_time = matrix_df['Time Usage (seconds)'].max()
         barplot = sns.barplot(x='Tolerance', y='Time Usage (seconds)', hue='Solver', data=matrix_df, ax=axs[0])
         axs[0].set_title('Time Usage by Solver and Tolerance')
         axs[0].set_ylabel('Time Usage (seconds)')
         axs[0].set_xlabel('Tolerance')
-        axs[0].set_ylim(0, max_time * 1.1)
-        axs[0].set_yscale('log')  # Aggiungi scala logaritmica qui
+        axs[0].set_ylim(0, max_time * 1.2)  # Set ylim slightly above max time for better visualization
+
+        for container in axs[0].containers:
+            axs[0].bar_label(container)
+
+        for patch in barplot.patches:
+            patch.set_edgecolor(patch.get_facecolor())
 
         for container in axs[0].containers:
             axs[0].bar_label(container)
@@ -142,7 +148,7 @@ def plot_results(df, specific_tolerance=1e-10):
             patch.set_edgecolor(patch.get_facecolor())
 
         # Plot residual progression for specific tolerance
-        tolerance_df = matrix_df[matrix_df['Tolerance'] == specific_tolerance]
+        tolerance_df = matrix_df[matrix_df['Tolerance'] == 1e-10]
 
         if not tolerance_df.empty:
             # Iterate over each solver
@@ -163,47 +169,9 @@ def plot_results(df, specific_tolerance=1e-10):
         plot_path = os.path.join(RESULTS_DIR, f'{os.path.basename(matrix)}_results.png')
         plt.savefig(plot_path)
         plt.close(fig)
-
-
-def plot_enhanced_bar_chart(df, specific_tolerance=1e-6):
-    df_filtered = df[df['Tolerance'] == specific_tolerance]
-
-    # Extract unique solvers and tolerances
-    solvers = df_filtered['Solver'].unique()
-    tolerances = df_filtered['Tolerance'].unique()
-
-    # Prepare data for plotting
-    residuals = np.array([df_filtered[df_filtered['Solver'] == solver]['Residual'].values for solver in solvers])
-
-    # Plotting
-    sns.set(style="whitegrid")
-    fig, ax = plt.subplots(figsize=(10, 6))
-
-    bar_width = 0.2
-    index = np.arange(len(tolerances))
-
-    for i, solver in enumerate(solvers):
-        plt.bar(index + i * bar_width, residuals[i], bar_width, label=solver)
-
-    plt.xlabel('Tolerance', fontsize=14)
-    plt.ylabel('Residual', fontsize=14)
-    plt.title('Residual by Solver and Tolerance', fontsize=16)
-    plt.xticks(index + bar_width * 1.5, tolerances, fontsize=12)
-    plt.yscale('log')
-    plt.legend(title='Solver', fontsize=12)
-    plt.grid(True, which="both", linestyle='--', linewidth=0.5)
-
-    # Adding annotations
-    for i in range(len(tolerances)):
-        for j in range(len(solvers)):
-            plt.text(index[i] + j * bar_width, residuals[j, i], f'{residuals[j, i]:.1e}', 
-                     ha='center', va='bottom', fontsize=10, rotation=90)
-
-    plt.tight_layout()
     
 
 if __name__ == "__main__":
     results = run_matrix_solvers()
     data = parse_data(results)
     plot_results(data)
-    plot_enhanced_bar_chart(data)
