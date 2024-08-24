@@ -102,13 +102,7 @@ def plot_results(df):
         axs[0].set_title('Time Usage by Solver and Tolerance')
         axs[0].set_ylabel('Time Usage (seconds)')
         axs[0].set_xlabel('Tolerance')
-        axs[0].set_ylim(0, max_time * 1.2)  # Set ylim slightly above max time for better visualization
-
-        for container in axs[0].containers:
-            axs[0].bar_label(container)
-
-        for patch in barplot.patches:
-            patch.set_edgecolor(patch.get_facecolor())
+        axs[0].set_ylim(0, max_time * 1.2)
 
         for container in axs[0].containers:
             axs[0].bar_label(container)
@@ -127,8 +121,13 @@ def plot_results(df):
         axs[1].set_ylim(min_residual * 0.1, max_residual * 1.1)
         axs[1].yaxis.set_major_formatter(plt.FuncFormatter(lambda x, _: f'{x:.1e}'))
 
-        for container in axs[1].containers:
-            axs[1].bar_label(container)
+        # Add labels only for the maximum residuals in each tolerance level
+        for tolerance, group in matrix_df.groupby('Tolerance'):
+            max_residual = group['Residual'].max()
+            max_index = group['Residual'].idxmax()
+            row = group.loc[max_index]
+            axs[1].text(row['Tolerance'], row['Residual'] + max_residual * 0.1, f'{row["Residual"]:.2e}', 
+                        color='black', ha='center', fontsize=12, weight='bold')
 
         for patch in barplot.patches:
             patch.set_edgecolor(patch.get_facecolor())
@@ -139,7 +138,7 @@ def plot_results(df):
         axs[2].set_title('Iterations by Solver and Tolerance')
         axs[2].set_ylabel('Iterations')
         axs[2].set_xlabel('Tolerance')
-        axs[2].set_ylim(0, max_iterations * 1.1)  # Set ylim slightly above max iterations for better visualization
+        axs[2].set_ylim(0, max_iterations * 1.1)
 
         for container in axs[2].containers:
             axs[2].bar_label(container)
@@ -151,17 +150,16 @@ def plot_results(df):
         tolerance_df = matrix_df[matrix_df['Tolerance'] == 1e-10]
 
         if not tolerance_df.empty:
-            # Iterate over each solver
             for solver_name in tolerance_df['Solver'].unique():
                 for _, row in tolerance_df[tolerance_df['Solver'] == solver_name].iterrows():
-                    residuals = np.array(row['List of residuals'])  # Convert to numpy array
+                    residuals = np.array(row['List of residuals'])
                     iterations = np.arange(1, len(residuals) + 1)
                     axs[3].plot(iterations, residuals, label=f'{solver_name}', alpha=0.7)
 
             axs[3].set_ylabel('Residual')
             axs[3].set_xlabel('Iteration')
             axs[3].set_yscale('log')
-            axs[3].legend(loc='upper right')  # Specify legend location
+            axs[3].legend(loc='upper right')
 
         plt.tight_layout(rect=[0, 0, 1, 0.96])
 
@@ -169,7 +167,6 @@ def plot_results(df):
         plot_path = os.path.join(RESULTS_DIR, f'{os.path.basename(matrix)}_results.png')
         plt.savefig(plot_path)
         plt.close(fig)
-    
 
 if __name__ == "__main__":
     results = run_matrix_solvers()
