@@ -9,6 +9,7 @@ from JacobiExecuter import JacobiExecuter
 from ConjugateGradientExecuter import ConjugateGradientExecuter
 from GaussSeidelExecuter import GaussSeidelExecuter
 from GradientExecuter import GradientExecuter
+import matplotlib.ticker as mticker  
 
 PATH = 'matrici'
 RESULTS_DIR = 'results'
@@ -37,7 +38,7 @@ def run_matrix_solvers():
             solvers = [
                 ('Jacobi', JacobiExecuter(A, tol, max_iterations)),
                 ('Conjugate Gradient', ConjugateGradientExecuter(A, tol, max_iterations)),
-                ('Gauss Seidel', GaussSeidelExecuter(A, tol, max_iterations)),
+                #('Gauss Seidel', GaussSeidelExecuter(A, tol, max_iterations)),
                 ('Gradient', GradientExecuter(A, tol, max_iterations))
             ]
             
@@ -102,10 +103,16 @@ def plot_results(df):
         axs[0].set_title('Time Usage by Solver and Tolerance')
         axs[0].set_ylabel('Time Usage (seconds)')
         axs[0].set_xlabel('Tolerance')
-        axs[0].set_ylim(0, max_time * 1.2)
+        axs[0].set_yscale('log')  # Set y-axis to logarithmic scale to make all bars visible
+        axs[0].set_ylim(1, max_time * 1.2)  # Set y-axis limits starting from 1 for better visibility
+        
+        # Format y-axis with exponential notation
+        axs[0].yaxis.set_major_formatter(mticker.FuncFormatter(lambda x, _: f'$10^{{{int(np.log10(x))}}}$' if x > 0 else ''))
 
+        # Round time usage to 2 decimal places for labels
         for container in axs[0].containers:
-            axs[0].bar_label(container)
+            labels = [f'{v.get_height():.2f}' for v in container]
+            axs[0].bar_label(container, labels=labels)
 
         for patch in barplot.patches:
             patch.set_edgecolor(patch.get_facecolor())
@@ -119,7 +126,9 @@ def plot_results(df):
         axs[1].set_xlabel('Tolerance')
         axs[1].set_yscale('log')
         axs[1].set_ylim(min_residual * 0.1, max_residual * 1.1)
-        axs[1].yaxis.set_major_formatter(plt.FuncFormatter(lambda x, _: f'{x:.1e}'))
+        
+        # Use scientific notation for the y-axis labels
+        axs[1].yaxis.set_major_formatter(mticker.FuncFormatter(lambda x, _: f'$10^{{{int(np.log10(x))}}}$' if x > 0 else ''))
 
         # Add labels only for the maximum residuals in each tolerance level
         for tolerance, group in matrix_df.groupby('Tolerance'):
@@ -138,10 +147,12 @@ def plot_results(df):
         axs[2].set_title('Iterations by Solver and Tolerance')
         axs[2].set_ylabel('Iterations')
         axs[2].set_xlabel('Tolerance')
-        axs[2].set_ylim(0, max_iterations * 1.1)
+        axs[2].set_yscale('log')  # Set y-axis to logarithmic scale to ensure visibility of all bars
+        axs[2].set_ylim(1, max_iterations * 1.1)
 
         for container in axs[2].containers:
-            axs[2].bar_label(container)
+            labels = [f'{v.get_height():.2f}' for v in container]
+            axs[2].bar_label(container, labels=labels)
 
         for patch in barplot.patches:
             patch.set_edgecolor(patch.get_facecolor())
