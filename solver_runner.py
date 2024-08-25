@@ -122,6 +122,9 @@ def plot_results(df):
         for patch in barplot.patches:
             patch.set_edgecolor(patch.get_facecolor())
 
+        # Position the legend outside the plot
+        axs[0].legend(loc='upper left', bbox_to_anchor=(1, 1), borderaxespad=0.)
+
         # Plot residual
         max_residual = matrix_df['Residual'].max()
         min_residual = matrix_df['Residual'].min()
@@ -146,6 +149,9 @@ def plot_results(df):
         for patch in barplot.patches:
             patch.set_edgecolor(patch.get_facecolor())
 
+        # Position the legend outside the plot
+        axs[1].legend(loc='upper left', bbox_to_anchor=(1, 1), borderaxespad=0.)
+
         # Plot iterations
         max_iterations = matrix_df['Iterations'].max()
         barplot = sns.barplot(x='Tolerance', y='Iterations', hue='Solver', data=matrix_df, ax=axs[2])
@@ -162,6 +168,9 @@ def plot_results(df):
         for patch in barplot.patches:
             patch.set_edgecolor(patch.get_facecolor())
 
+        # Position the legend outside the plot
+        axs[2].legend(loc='upper left', bbox_to_anchor=(1, 1), borderaxespad=0.)
+
         # Plot residual progression for specific tolerance
         tolerance_df = matrix_df[matrix_df['Tolerance'] == 1e-10]
 
@@ -175,14 +184,16 @@ def plot_results(df):
             axs[3].set_ylabel('Residual')
             axs[3].set_xlabel('Iteration')
             axs[3].set_yscale('log')
-            axs[3].legend(loc='upper right')
+            # Position the legend outside the plot
+            axs[3].legend(loc='upper left', bbox_to_anchor=(1, 1), borderaxespad=0.)
 
-        plt.tight_layout(rect=[0, 0, 1, 0.96])
+        plt.tight_layout(rect=[0, 0, 0.85, 0.96])  # Adjust rect to give space for the legend outside
 
         # Save the plot
         plot_path = os.path.join(RESULTS_DIR, f'{os.path.basename(matrix)}_results.png')
-        plt.savefig(plot_path)
+        plt.savefig(plot_path, bbox_inches='tight')  # Save figure with adjusted bbox
         plt.close(fig)
+
 
 if __name__ == "__main__":
     results = run_matrix_solvers()
