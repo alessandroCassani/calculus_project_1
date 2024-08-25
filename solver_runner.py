@@ -38,7 +38,7 @@ def run_matrix_solvers():
             solvers = [
                 ('Jacobi', JacobiExecuter(A, tol, max_iterations)),
                 ('Conjugate Gradient', ConjugateGradientExecuter(A, tol, max_iterations)),
-                #('Gauss Seidel', GaussSeidelExecuter(A, tol, max_iterations)),
+                ('Gauss Seidel', GaussSeidelExecuter(A, tol, max_iterations)),
                 ('Gradient', GradientExecuter(A, tol, max_iterations))
             ]
             
