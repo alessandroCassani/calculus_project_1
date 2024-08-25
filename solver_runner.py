@@ -4,12 +4,12 @@ import time
 import matplotlib.pyplot as plt
 import seaborn as sns
 import pandas as pd
+import matplotlib.ticker as mticker  # Import ticker for scientific notation formatting
 from Utility import Utility
 from JacobiExecuter import JacobiExecuter
 from ConjugateGradientExecuter import ConjugateGradientExecuter
 from GaussSeidelExecuter import GaussSeidelExecuter
 from GradientExecuter import GradientExecuter
-import matplotlib.ticker as mticker  
 
 PATH = 'matrici'
 RESULTS_DIR = 'results'
@@ -54,7 +54,7 @@ def run_matrix_solvers():
                 tol_results[solver_name] = {
                     'Iterations': counter,
                     'Residual': residual_norm,
-                    'Time Usage (seconds)': time_usage,
+                    'Time Usage (seconds)': max(time_usage, 1e-10),  # Ensure no zero values
                     'List of residuals': list_of_residuals
                 }
 
@@ -80,7 +80,12 @@ def parse_data(results):
                     'Time Usage (seconds)': metrics['Time Usage (seconds)'],
                     'List of residuals': metrics['List of residuals']
                 })
-    return pd.DataFrame(parsed_data)
+    df = pd.DataFrame(parsed_data)
+    # Convert columns to numeric to avoid plotting issues
+    df['Time Usage (seconds)'] = pd.to_numeric(df['Time Usage (seconds)'], errors='coerce')
+    df['Residual'] = pd.to_numeric(df['Residual'], errors='coerce')
+    df['Iterations'] = pd.to_numeric(df['Iterations'], errors='coerce')
+    return df
 
 def plot_results(df):
     if not os.path.exists(RESULTS_DIR):
@@ -104,7 +109,7 @@ def plot_results(df):
         axs[0].set_ylabel('Time Usage (seconds)')
         axs[0].set_xlabel('Tolerance')
         axs[0].set_yscale('log')  # Set y-axis to logarithmic scale to make all bars visible
-        axs[0].set_ylim(1, max_time * 1.2)  # Set y-axis limits starting from 1 for better visibility
+        axs[0].set_ylim(1e-10, max_time * 1.2)  # Set y-axis limits starting from 1e-10 for better visibility
         
         # Format y-axis with exponential notation
         axs[0].yaxis.set_major_formatter(mticker.FuncFormatter(lambda x, _: f'$10^{{{int(np.log10(x))}}}$' if x > 0 else ''))
