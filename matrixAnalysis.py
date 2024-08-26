@@ -10,7 +10,7 @@ def compute_condition_number(matrix):
     """
     try:
         cond_number = np.linalg.cond(matrix.toarray())  # Convert to dense array for condition number
-        print(f'Numero di condizionamento: {cond_number:.2e}')
+        print(f'Condition Number: {cond_number:.2e}')
         return cond_number
     except Exception as e:
         print(f"Error in computing condition number: {e}")
@@ -20,8 +20,8 @@ def plot_sparsity_pattern(matrix, title):
     """
     Function to plot the sparsity pattern of the matrix.
     """
-    plt.figure()
-    plt.spy(matrix, markersize=1)
+    plt.figure(figsize=(8, 8))
+    plt.spy(matrix, markersize=0.05)  # Decrease marker size for better granularity
     plt.title(title)
     plt.show()
 
@@ -29,11 +29,22 @@ def plot_value_distribution(matrix, title):
     """
     Function to plot the distribution of values in the matrix.
     """
-    plt.figure()
-    plt.hist(matrix.data, bins=50, color='blue', alpha=0.7)
+    plt.figure(figsize=(8, 6))
+
+    # Count zero values
+    zero_count = matrix.shape[0] * matrix.shape[1] - matrix.nnz
+    non_zero_values = matrix.data
+    
+    # Create histogram for non-zero values
+    plt.hist(non_zero_values, bins=20, color='blue', alpha=0.7, label='Non-Zero Values')
+
+    # Add a bar for zero values
+    plt.bar(['Zero Values'], [zero_count], color='red', alpha=0.7, label='Zero Values')
+
     plt.title(title)
-    plt.xlabel('Valore')
-    plt.ylabel('Frequenza')
+    plt.xlabel('Value')
+    plt.ylabel('Frequency')
+    plt.legend()
     plt.show()
 
 def main():
@@ -50,16 +61,16 @@ def main():
         A = Utility.read(matrix_file)
         if A is not None:
             matrix_name = matrix_file.split('/')[-1].split('.')[0]  # Extract the matrix name from the filename
-            print(f"Analisi della matrice: {matrix_name}")
+            print(f"Analyzing matrix: {matrix_name}")
 
             # Calculate and print the condition number
             compute_condition_number(A)
 
             # Plot the sparsity pattern of the matrix
-            plot_sparsity_pattern(A, f'Pattern di Sparsità della Matrice {matrix_name}')
+            plot_sparsity_pattern(A, f'Sparsity Pattern of Matrix {matrix_name}')
 
             # Plot the distribution of the non-zero values of the matrix
-            plot_value_distribution(A, f'Distribuzione dei Valori degli Elementi della Matrice {matrix_name}')
+            plot_value_distribution(A, f'Distribution of Non-Zero Values in Matrix {matrix_name}')
 
 if __name__ == "__main__":
     main()
