@@ -114,9 +114,9 @@ def plot_results(df):
         # Format y-axis with exponential notation
         axs[0].yaxis.set_major_formatter(mticker.FuncFormatter(lambda x, _: f'$10^{{{int(np.log10(x))}}}$' if x > 0 else ''))
 
-        # Round time usage to 2 decimal places for labels
+        # Round time usage to 3 decimal places for labels
         for container in axs[0].containers:
-            labels = [f'{v.get_height():.2f}' for v in container]
+            labels = [f'{v.get_height():.3f}' for v in container]  # Use 3 decimal places for time usage
             axs[0].bar_label(container, labels=labels)
 
         for patch in barplot.patches:
@@ -162,7 +162,7 @@ def plot_results(df):
         axs[2].set_ylim(1, max_iterations * 1.1)
 
         for container in axs[2].containers:
-            labels = [f'{v.get_height():.2f}' for v in container]
+            labels = [f'{int(v.get_height())}' for v in container]  # Use integer values for iterations
             axs[2].bar_label(container, labels=labels)
 
         for patch in barplot.patches:
