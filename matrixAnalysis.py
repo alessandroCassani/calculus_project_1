@@ -21,7 +21,7 @@ def plot_sparsity_pattern(matrix, title):
     Function to plot the sparsity pattern of the matrix.
     """
     plt.figure(figsize=(8, 8))
-    plt.spy(matrix, markersize=0.05)  # Decrease marker size for better granularity
+    plt.spy(matrix, markersize=0.0000005)  # Decrease marker size for better granularity
     plt.title(title)
     plt.show()
 
@@ -29,22 +29,30 @@ def plot_value_distribution(matrix, title):
     """
     Function to plot the distribution of values in the matrix.
     """
-    plt.figure(figsize=(8, 6))
+    plt.figure(figsize=(3, 5))
 
-    # Count zero values
+    # Extract non-zero values and calculate zero counts
     zero_count = matrix.shape[0] * matrix.shape[1] - matrix.nnz
     non_zero_values = matrix.data
-    
-    # Create histogram for non-zero values
+
+    # Plot histogram for non-zero values
     plt.hist(non_zero_values, bins=20, color='blue', alpha=0.7, label='Non-Zero Values')
 
+    # Calculate the width of the bins to align zero count bar properly
+    bin_width = (max(non_zero_values) - min(non_zero_values)) / 20 if non_zero_values.size > 0 else 1
+    zero_bar_position = min(non_zero_values) - bin_width  # Position the zero value bar just before the first bin
+
     # Add a bar for zero values
-    plt.bar(['Zero Values'], [zero_count], color='red', alpha=0.7, label='Zero Values')
+    plt.bar(zero_bar_position, zero_count, width=bin_width, color='red', alpha=0.7, label='Zero Values')
 
     plt.title(title)
     plt.xlabel('Value')
     plt.ylabel('Frequency')
     plt.legend()
+
+    # Remove x-axis ticks and labels
+    plt.xticks([])
+
     plt.show()
 
 def main():
