@@ -116,10 +116,12 @@ def plot_results(df):
 
         # Round time usage to 3 decimal places for labels
         for container in axs[0].containers:
-            labels = [f'{v.get_height():.3f}' for v in container]  # Use 3 decimal places for time usage
+            labels = [f'{v.get_height():.4f}' for v in container] 
             axs[0].bar_label(container, labels=labels)
 
         for patch in barplot.patches:
+            patch_width = patch.get_width()
+            patch.set_width(patch_width * 0.80)
             patch.set_edgecolor(patch.get_facecolor())
 
         # Position the legend outside the plot
