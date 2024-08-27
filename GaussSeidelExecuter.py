@@ -1,26 +1,17 @@
 import numpy as np
 from scipy.sparse import csc_matrix, tril
+from scipy.sparse.linalg import spsolve
 from Executer import Executer
 
 class GaussSeidelExecuter(Executer):
     def __init__(self, matrix: csc_matrix, tol: float, max_iter: int = 20000):
         super().__init__(matrix, tol, max_iter)
-        self.triang_inf = tril(matrix).tocsc()  
-    
-    def forward_substitution(self, L: csc_matrix, b: np.ndarray):
-        """ Perform forward substitution to solve Ly = b for a lower triangular matrix L. """
-        n = L.shape[0]
-        y = np.zeros(n)
-        
-        for i in range(n):
-            y[i] = (b[i] - L[i, :i] @ y[:i]) / L[i, i]
-        
-        return y
+        self.triang_inf = tril(matrix).tocsc()  # Sparse lower triangular matrix
     
     def update_function(self):
         r = self.b - self.matrix.dot(self.x)  # Compute residual r(k) = b - A * x(k)
-        y = self.forward_substitution(self.triang_inf, r)  # Solve P * y = r(k) using forward substitution
+        y = spsolve(self.triang_inf, r)  # Solve P * y = r(k) using optimized forward substitution
         
-        # self.x +y scope: update x(k) = x(k) + y
-        return self.x + y, r
-    
+        # Update x(k) = x(k) + y in-place
+        self.x += y
+        return self.x, r  # Return updated x and residual r

@@ -4,6 +4,7 @@ import time
 import matplotlib.pyplot as plt
 import seaborn as sns
 import pandas as pd
+import matplotlib.ticker as mticker  # Import ticker for scientific notation formatting
 from Utility import Utility
 from JacobiExecuter import JacobiExecuter
 from ConjugateGradientExecuter import ConjugateGradientExecuter
@@ -53,7 +54,7 @@ def run_matrix_solvers():
                 tol_results[solver_name] = {
                     'Iterations': counter,
                     'Residual': residual_norm,
-                    'Time Usage (seconds)': time_usage,
+                    'Time Usage (seconds)': max(time_usage, 1e-10),  # Ensure no zero values
                     'List of residuals': list_of_residuals
                 }
 
@@ -79,7 +80,12 @@ def parse_data(results):
                     'Time Usage (seconds)': metrics['Time Usage (seconds)'],
                     'List of residuals': metrics['List of residuals']
                 })
-    return pd.DataFrame(parsed_data)
+    df = pd.DataFrame(parsed_data)
+    # Convert columns to numeric to avoid plotting issues
+    df['Time Usage (seconds)'] = pd.to_numeric(df['Time Usage (seconds)'], errors='coerce')
+    df['Residual'] = pd.to_numeric(df['Residual'], errors='coerce')
+    df['Iterations'] = pd.to_numeric(df['Iterations'], errors='coerce')
+    return df
 
 def plot_results(df):
     if not os.path.exists(RESULTS_DIR):
@@ -93,7 +99,12 @@ def plot_results(df):
         matrix_df = df[df['Matrix'] == matrix]
 
         fig, axs = plt.subplots(4, 1, figsize=(12, 32))
-        fig.suptitle(f'Results for Matrix: {matrix}', fontsize=16)
+
+        # Adjust the spacing to move the title higher
+        plt.subplots_adjust(top=0.95)  # Reduce the top margin to move the title up
+
+        fig.suptitle(f'Results for Matrix: {matrix}', fontsize=16, y=0.98)  # Adjust y parameter to move title higher
+
         matrix_df = matrix_df.sort_values(by='Tolerance', ascending=False)
 
         # Plot time usage
@@ -102,13 +113,24 @@ def plot_results(df):
         axs[0].set_title('Time Usage by Solver and Tolerance')
         axs[0].set_ylabel('Time Usage (seconds)')
         axs[0].set_xlabel('Tolerance')
-        axs[0].set_ylim(0, max_time * 1.2)
+        axs[0].set_yscale('log')  # Set y-axis to logarithmic scale to make all bars visible
+        axs[0].set_ylim(1e-10, max_time * 1.2)  # Set y-axis limits starting from 1e-10 for better visibility
 
+        # Format y-axis with exponential notation
+        axs[0].yaxis.set_major_formatter(mticker.FuncFormatter(lambda x, _: f'$10^{{{int(np.log10(x))}}}$' if x > 0 else ''))
+
+        # Round time usage to 3 decimal places for labels
         for container in axs[0].containers:
-            axs[0].bar_label(container)
+            labels = [f'{v.get_height():.3f}' for v in container] 
+            axs[0].bar_label(container, labels=labels)
 
         for patch in barplot.patches:
+            patch_width = patch.get_width()
+            patch.set_width(patch_width * 0.80)
             patch.set_edgecolor(patch.get_facecolor())
+
+        # Position the legend outside the plot
+        axs[0].legend(loc='upper left', bbox_to_anchor=(1, 1), borderaxespad=0.)
 
         # Plot residual
         max_residual = matrix_df['Residual'].max()
@@ -119,7 +141,9 @@ def plot_results(df):
         axs[1].set_xlabel('Tolerance')
         axs[1].set_yscale('log')
         axs[1].set_ylim(min_residual * 0.1, max_residual * 1.1)
-        axs[1].yaxis.set_major_formatter(plt.FuncFormatter(lambda x, _: f'{x:.1e}'))
+
+        # Use scientific notation for the y-axis labels
+        axs[1].yaxis.set_major_formatter(mticker.FuncFormatter(lambda x, _: f'$10^{{{int(np.log10(x))}}}$' if x > 0 else ''))
 
         # Add labels only for the maximum residuals in each tolerance level
         for tolerance, group in matrix_df.groupby('Tolerance'):
@@ -132,19 +156,27 @@ def plot_results(df):
         for patch in barplot.patches:
             patch.set_edgecolor(patch.get_facecolor())
 
+        # Position the legend outside the plot
+        axs[1].legend(loc='upper left', bbox_to_anchor=(1, 1), borderaxespad=0.)
+
         # Plot iterations
         max_iterations = matrix_df['Iterations'].max()
         barplot = sns.barplot(x='Tolerance', y='Iterations', hue='Solver', data=matrix_df, ax=axs[2])
         axs[2].set_title('Iterations by Solver and Tolerance')
         axs[2].set_ylabel('Iterations')
         axs[2].set_xlabel('Tolerance')
-        axs[2].set_ylim(0, max_iterations * 1.1)
+        axs[2].set_yscale('log')  # Set y-axis to logarithmic scale to ensure visibility of all bars
+        axs[2].set_ylim(1, max_iterations * 1.1)
 
         for container in axs[2].containers:
-            axs[2].bar_label(container)
+            labels = [f'{int(v.get_height())}' for v in container]  # Use integer values for iterations
+            axs[2].bar_label(container, labels=labels)
 
         for patch in barplot.patches:
             patch.set_edgecolor(patch.get_facecolor())
+
+        # Position the legend outside the plot
+        axs[2].legend(loc='upper left', bbox_to_anchor=(1, 1), borderaxespad=0.)
 
         # Plot residual progression for specific tolerance
         tolerance_df = matrix_df[matrix_df['Tolerance'] == 1e-10]
@@ -159,14 +191,17 @@ def plot_results(df):
             axs[3].set_ylabel('Residual')
             axs[3].set_xlabel('Iteration')
             axs[3].set_yscale('log')
-            axs[3].legend(loc='upper right')
+            # Position the legend outside the plot
+            axs[3].legend(loc='upper left', bbox_to_anchor=(1, 1), borderaxespad=0.)
 
-        plt.tight_layout(rect=[0, 0, 1, 0.96])
+        plt.tight_layout(rect=[0, 0, 0.85, 0.96])  # Adjust rect to give space for the legend outside
 
         # Save the plot
         plot_path = os.path.join(RESULTS_DIR, f'{os.path.basename(matrix)}_results.png')
-        plt.savefig(plot_path)
+        plt.savefig(plot_path, bbox_inches='tight')  # Save figure with adjusted bbox
         plt.close(fig)
+
+
 
 if __name__ == "__main__":
     results = run_matrix_solvers()
