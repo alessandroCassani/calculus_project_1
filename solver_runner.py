@@ -99,7 +99,12 @@ def plot_results(df):
         matrix_df = df[df['Matrix'] == matrix]
 
         fig, axs = plt.subplots(4, 1, figsize=(12, 32))
-        fig.suptitle(f'Results for Matrix: {matrix}', fontsize=16)
+
+        # Adjust the spacing to move the title higher
+        plt.subplots_adjust(top=0.95)  # Reduce the top margin to move the title up
+
+        fig.suptitle(f'Results for Matrix: {matrix}', fontsize=16, y=0.98)  # Adjust y parameter to move title higher
+
         matrix_df = matrix_df.sort_values(by='Tolerance', ascending=False)
 
         # Plot time usage
@@ -110,13 +115,13 @@ def plot_results(df):
         axs[0].set_xlabel('Tolerance')
         axs[0].set_yscale('log')  # Set y-axis to logarithmic scale to make all bars visible
         axs[0].set_ylim(1e-10, max_time * 1.2)  # Set y-axis limits starting from 1e-10 for better visibility
-        
+
         # Format y-axis with exponential notation
         axs[0].yaxis.set_major_formatter(mticker.FuncFormatter(lambda x, _: f'$10^{{{int(np.log10(x))}}}$' if x > 0 else ''))
 
         # Round time usage to 3 decimal places for labels
         for container in axs[0].containers:
-            labels = [f'{v.get_height():.4f}' for v in container] 
+            labels = [f'{v.get_height():.3f}' for v in container] 
             axs[0].bar_label(container, labels=labels)
 
         for patch in barplot.patches:
@@ -136,7 +141,7 @@ def plot_results(df):
         axs[1].set_xlabel('Tolerance')
         axs[1].set_yscale('log')
         axs[1].set_ylim(min_residual * 0.1, max_residual * 1.1)
-        
+
         # Use scientific notation for the y-axis labels
         axs[1].yaxis.set_major_formatter(mticker.FuncFormatter(lambda x, _: f'$10^{{{int(np.log10(x))}}}$' if x > 0 else ''))
 
@@ -195,6 +200,7 @@ def plot_results(df):
         plot_path = os.path.join(RESULTS_DIR, f'{os.path.basename(matrix)}_results.png')
         plt.savefig(plot_path, bbox_inches='tight')  # Save figure with adjusted bbox
         plt.close(fig)
+
 
 
 if __name__ == "__main__":
