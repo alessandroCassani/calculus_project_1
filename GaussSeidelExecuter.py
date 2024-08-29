@@ -10,8 +10,6 @@ class GaussSeidelExecuter(Executer):
     
     def update_function(self):
         r = self.b - self.matrix.dot(self.x)  # Compute residual r(k) = b - A * x(k)
-        y = spsolve(self.triang_inf, r)  # Solve P * y = r(k) using optimized forward substitution
-        
-        # Update x(k) = x(k) + y in-place
+        y = spsolve(self.triang_inf, r) 
         self.x += y
-        return self.x, r  # Return updated x and residual r
+        return self.x, r  

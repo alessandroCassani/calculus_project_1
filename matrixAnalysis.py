@@ -16,13 +16,27 @@ def compute_condition_number(matrix):
         print(f"Error in computing condition number: {e}")
         return None
 
+
 def plot_sparsity_pattern(matrix, title):
     """
-    Function to plot the sparsity pattern of the matrix.
+    Function to plot the sparsity pattern of the matrix and display its sparsity index.
+    
+    Parameters:
+    - matrix: The sparse matrix to plot the sparsity pattern for.
+    - title: The title for the plot.
     """
+    # Calculate sparsity index
+    total_elements = matrix.shape[0] * matrix.shape[1]
+    zero_elements = total_elements - matrix.nnz  # Number of zero elements
+    sparsity_index = 1 - zero_elements / total_elements
+
+    
+    # Update title with sparsity index
+    title_with_sparsity = f"{title}\nSparsity Index: {sparsity_index:.4f}"
+
     plt.figure(figsize=(8, 8))
-    plt.spy(matrix, markersize=0.0000005)  # Decrease marker size for better granularity
-    plt.title(title)
+    plt.spy(matrix, markersize=0.0001)  # Set marker size for better granularity
+    plt.title(title_with_sparsity)
     plt.show()
 
 def plot_value_distribution(matrix, title):

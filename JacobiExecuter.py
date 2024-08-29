@@ -10,11 +10,11 @@ class JacobiExecuter(Executer):
         # Use matrix.diagonal() to directly get the diagonal elements as a 1D array
         diag_elements = matrix.diagonal()
         self.diagonal_inv = np.reciprocal(diag_elements, where=diag_elements!=0)  # Avoid division by zero
-        
+            
+    
     def update_function(self):
         # Compute the residual r(k) = b - A * x(k)
         r = self.b - self.matrix.dot(self.x)
-        
         # Update x(k+1) = x(k) + D^-1 * r(k) (in-place update)
         np.multiply(self.diagonal_inv, r, out=r)  # r becomes D^-1 * r(k)
         self.x += r  # x(k+1) = x(k) + D^-1 * r(k)

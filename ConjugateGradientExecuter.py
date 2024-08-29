@@ -9,7 +9,6 @@ class ConjugateGradientExecuter(Executer):
         self.p_old = None  
 
     def update_function(self):
-        # Compute residual
         self.residual = self.b - self.matrix.dot(self.x)
         
         # Initialization of p(0)
@@ -29,11 +28,8 @@ class ConjugateGradientExecuter(Executer):
         
         # Update x(k+1) = x(k) + alpha * p
         self.x = self.x + alpha * p
-        
-        # Store values for next iteration
+
         self.r_old = self.residual
         self.p_old = p
-        
-    
         
         return self.x, self.residual
